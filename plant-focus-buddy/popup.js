@@ -63,10 +63,16 @@ function loadState() {
     const plantWrap = document.getElementById('popup-plant-wrap');
     renderPlant(plantHealth, plantWrap);
 
-    // Health card
+    // Health ring
     document.getElementById('health-num').textContent = Math.round(plantHealth);
-    document.getElementById('health-bar').style.width = plantHealth + '%';
     document.getElementById('health-state').textContent = healthToStateName(plantHealth);
+    const arc = document.getElementById('health-ring-arc');
+    if (arc) {
+      const circumference = 188.5;
+      arc.style.strokeDashoffset = (circumference * (1 - plantHealth / 100)).toFixed(2);
+      const ringColor = plantHealth >= 60 ? '#7FFFA0' : plantHealth >= 35 ? '#FFD166' : plantHealth >= 10 ? '#FF9A5C' : '#AAAAAA';
+      arc.style.stroke = ringColor;
+    }
 
     // Toggle
     document.getElementById('plant-visible-toggle').checked = plantVisible;
