@@ -14,14 +14,50 @@ function healthToStateName(health) {
   return 'Dead';
 }
 
+function renderShortcuts(goodSites) {
+  const row = document.getElementById('shortcuts-row');
+  row.innerHTML = '';
+  (goodSites || []).forEach(domain => {
+    const a = document.createElement('a');
+    a.className = 'shortcut';
+    a.href = 'https://' + domain;
+
+    const icon = document.createElement('div');
+    icon.className = 'shortcut-icon';
+
+    const img = document.createElement('img');
+    img.width = 28;
+    img.height = 28;
+    img.src = 'https://www.google.com/s2/favicons?domain=' + domain + '&sz=64';
+    img.onerror = () => {
+      img.style.display = 'none';
+      const letter = document.createElement('span');
+      letter.className = 'shortcut-letter';
+      letter.textContent = domain[0];
+      icon.appendChild(letter);
+    };
+    icon.appendChild(img);
+
+    const label = document.createElement('div');
+    label.className = 'shortcut-label';
+    label.textContent = domain.replace(/\.(com|org|net|io|app|so)$/, '');
+
+    a.appendChild(icon);
+    a.appendChild(label);
+    row.appendChild(a);
+  });
+}
+
 function updateUI(state) {
-  const { plantHealth = 70, sessionGoodTime = 0, sessionBadTime = 0, streak = 0 } = state;
+  const { plantHealth = 70, sessionGoodTime = 0, sessionBadTime = 0, streak = 0, goodSites = [] } = state;
+  renderShortcuts(goodSites);
 
   const plantWrap = document.getElementById('newtab-plant-wrap');
   renderPlant(plantHealth, plantWrap);
 
   document.getElementById('health-pct').textContent = Math.round(plantHealth);
   document.getElementById('health-bar').style.width = plantHealth + '%';
+  document.getElementById('health-glow').style.width = plantHealth + '%';
   document.getElementById('state-label').textContent = healthToStateName(plantHealth);
   document.getElementById('stat-good').textContent = formatTime(sessionGoodTime);
   document.getElementById('stat-bad').textContent = formatTime(sessionBadTime);
@@ -31,6 +67,18 @@ function updateUI(state) {
   document.body.classList.remove('tint-wilting', 'tint-dead');
   if (plantHealth < 10) document.body.classList.add('tint-dead');
   else if (plantHealth < 35) document.body.classList.add('tint-wilting');
+}
+
+function updateClock() {
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2, '0');
+  const m = String(now.getMinutes()).padStart(2, '0');
+  document.getElementById('clock').textContent = h + ':' + m;
+
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('date-label').textContent =
+    days[now.getDay()] + ', ' + months[now.getMonth()] + ' ' + now.getDate();
 }
 
 function fetchAndRender() {
@@ -49,6 +97,9 @@ function fetchAndRender() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  updateClock();
+  setInterval(updateClock, 1000);
+
   fetchAndRender();
   setInterval(fetchAndRender, 10000);
 
