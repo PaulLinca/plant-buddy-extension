@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Plant Focus Buddy</title>
+  <link rel="stylesheet" href="plant.css">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <div class="popup-header">
+      <div id="popup-plant-wrap" class="popup-plant-wrap"></div>
+      <div class="popup-title">Plant Focus Buddy</div>
+    </div>
+
+    <!-- Health card -->
+    <div class="health-card">
+      <div class="health-num" id="health-num">--</div>
+      <div class="health-bar-bg">
+        <div class="health-bar-fill" id="health-bar"></div>
+      </div>
+      <div class="health-state" id="health-state">Loading...</div>
+    </div>
+
+    <!-- Toggle row -->
+    <div class="toggle-row">
+      <span>Show plant on pages</span>
+      <label class="switch">
+        <input type="checkbox" id="plant-visible-toggle" checked>
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <!-- Position selector -->
+    <div class="section-label">Position</div>
+    <div class="position-grid">
+      <button class="pos-btn" data-pos="top-left">↖ Top Left</button>
+      <button class="pos-btn" data-pos="top-right">↗ Top Right</button>
+      <button class="pos-btn" data-pos="bottom-left">↙ Bottom Left</button>
+      <button class="pos-btn" data-pos="bottom-right">↘ Bottom Right</button>
+    </div>
+
+    <!-- Good sites -->
+    <div class="section-label">Good Sites</div>
+    <div id="good-sites-list" class="sites-list"></div>
+    <div class="site-input-row">
+      <input type="text" id="good-site-input" placeholder="e.g. notion.so" class="site-input">
+      <button id="add-good-btn" class="add-btn">Add</button>
+    </div>
+    <div class="input-error" id="good-error"></div>
+
+    <!-- Bad sites -->
+    <div class="section-label">Bad Sites</div>
+    <div id="bad-sites-list" class="sites-list"></div>
+    <div class="site-input-row">
+      <input type="text" id="bad-site-input" placeholder="e.g. reddit.com" class="site-input">
+      <button id="add-bad-btn" class="add-btn">Add</button>
+    </div>
+    <div class="input-error" id="bad-error"></div>
+
+    <!-- Reset -->
+    <button id="reset-btn" class="reset-btn">Reset Plant Health</button>
+
+    <!-- Footer -->
+    <div class="footer">v1.0.0</div>
+  </div>
+  <script src="plant.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

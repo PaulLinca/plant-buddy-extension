@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plant Focus Buddy</title>
+  <link rel="stylesheet" href="plant.css">
+  <link rel="stylesheet" href="newtab.css">
+</head>
+<body>
+  <div class="newtab-container">
+    <h1 class="app-title">Plant Focus Buddy</h1>
+    <div id="newtab-plant-wrap" class="newtab-plant-wrap"></div>
+    <div class="health-section">
+      <div class="health-label">Health: <span id="health-pct">--</span>%</div>
+      <div class="health-bar-bg">
+        <div class="health-bar-fill" id="health-bar"></div>
+      </div>
+      <div class="state-label" id="state-label">Loading...</div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value" id="stat-good">--</div>
+        <div class="stat-label">Today's Focus</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-bad">--</div>
+        <div class="stat-label">Distracted</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-streak">--</div>
+        <div class="stat-label">Day Streak</div>
+      </div>
+    </div>
+    <a class="manage-link" href="#" id="manage-sites-link">Manage sites</a>
+  </div>
+  <script src="plant.js"></script>
+  <script src="newtab.js"></script>
+</body>
+</html>
