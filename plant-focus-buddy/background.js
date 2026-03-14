@@ -12,6 +12,7 @@ const DEFAULTS = {
   sessionBadTime: 0,
   lastResetDate: todayString(),
   streak: 0,
+  darkMode: false,
   totalGoodTime: 0,
   totalBadTime: 0
 };

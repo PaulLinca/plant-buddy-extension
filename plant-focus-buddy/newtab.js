@@ -49,7 +49,9 @@ function renderShortcuts(goodSites) {
 }
 
 function updateUI(state) {
-  const { plantHealth = 70, sessionGoodTime = 0, sessionBadTime = 0, streak = 0, goodSites = [] } = state;
+  const { plantHealth = 70, sessionGoodTime = 0, sessionBadTime = 0, streak = 0, goodSites = [], darkMode = false } = state;
+  document.documentElement.classList.toggle('dark', darkMode);
+  document.body.classList.toggle('dark', darkMode);
   renderShortcuts(goodSites);
 
   const plantWrap = document.getElementById('newtab-plant-wrap');

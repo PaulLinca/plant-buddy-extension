@@ -57,7 +57,10 @@ function loadState() {
   chrome.runtime.sendMessage({ type: 'GET_STATE' }, (state) => {
     if (!state) return;
     appState = state;
-    const { plantHealth = 70, plantVisible = true, plantPosition = 'bottom-right', goodSites = [], badSites = [] } = state;
+    const { plantHealth = 70, plantVisible = true, plantPosition = 'bottom-right', darkMode = false, goodSites = [], badSites = [] } = state;
+
+    document.body.classList.toggle('dark', darkMode);
+    document.getElementById('dark-mode-toggle').checked = darkMode;
 
     // Plant header
     const plantWrap = document.getElementById('popup-plant-wrap');
@@ -92,6 +95,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // Visibility toggle
   document.getElementById('plant-visible-toggle').addEventListener('change', async (e) => {
     await chrome.storage.local.set({ plantVisible: e.target.checked });
+  });
+
+  // Dark mode toggle
+  document.getElementById('dark-mode-toggle').addEventListener('change', async (e) => {
+    const darkMode = e.target.checked;
+    await chrome.storage.local.set({ darkMode });
+    document.body.classList.toggle('dark', darkMode);
   });
 
   // Position buttons

@@ -6,6 +6,11 @@
   <title>Plant Focus Buddy</title>
   <link rel="stylesheet" href="plant.css">
   <link rel="stylesheet" href="newtab.css">
+  <script>
+    chrome.storage.local.get('darkMode', ({ darkMode }) => {
+      if (darkMode) document.documentElement.classList.add('dark');
+    });
+  </script>
 </head>
 <body>
   <div class="bg-orb orb-1"></div>

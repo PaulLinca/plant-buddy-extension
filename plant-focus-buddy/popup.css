@@ -169,7 +169,7 @@ body {
 .switch input { opacity: 0; width: 0; height: 0; }
 .slider {
   position: absolute; inset: 0;
-  background: #CBD5CE;
+  background: #B0BDB5;
   border-radius: 22px;
   cursor: pointer;
   transition: background 0.25s;
@@ -347,3 +347,43 @@ input:checked + .slider::before { transform: translateX(18px); }
   font-size: 10px;
   color: #B0C0B8;
 }
+
+/* ── Dark mode ────────────────────────────────────────────────────────── */
+body.dark { background: #151E18; }
+
+body.dark .hero {
+  background: linear-gradient(145deg, #0D2E18 0%, #1A5C30 60%, #236640 100%);
+}
+
+body.dark .body-wrap { /* inherits bg from body */ }
+
+body.dark .card {
+  background: #1E2B22;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.2);
+}
+body.dark .card-divider   { background: #2A3A2E; }
+body.dark .card-section-label { color: #5A7A65; }
+body.dark .row-text       { color: #C0D8C8; }
+body.dark .slider                    { background: #2A3530; }
+body.dark input:checked + .slider    { background: #2E9E50; }
+
+body.dark .pos-btn        { background: #1A2820; border-color: #2E4035; color: #6A9478; }
+body.dark .pos-btn:hover  { background: #243424; border-color: #3A6048; color: #90C4A0; }
+body.dark .pos-btn.active { background: #1B4830; border-color: #2E9E50; color: #6FD98A; }
+
+body.dark .sites-title    { color: #C0D8C8; }
+body.dark .sites-hint     { color: #4A6A55; }
+
+body.dark .site-tag       { background: #1A3825; color: #7FD898; border-color: #2A5035; }
+body.dark .site-tag.bad   { background: #3A1A1A; color: #F08080; border-color: #5A2A2A; }
+body.dark .site-tag button { background: rgba(255,255,255,0.07); }
+
+body.dark .site-input     { background: #1A2820; border-color: #2E4035; color: #C0D8C8; }
+body.dark .site-input:focus { background: #1E3028; border-color: #2E9E50; }
+body.dark .bad-input:focus  { border-color: #E85050; }
+
+body.dark .reset-btn      { background: #1E2B22; border-color: #5A2A2A; color: #E08080; }
+body.dark .reset-btn:hover { background: #3A1A1A; }
+body.dark .reset-btn.confirm { background: #E85050; color: #fff; }
+
+body.dark .footer         { color: #3A5040; }

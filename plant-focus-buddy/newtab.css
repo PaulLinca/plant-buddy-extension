@@ -8,7 +8,6 @@ body {
   justify-content: center;
   background: #e8f5eb;
   overflow: hidden;
-  transition: background 1.5s ease;
 }
 
 /* ── Health-based body tints ─────────────────────────────────────────── */
@@ -283,3 +282,53 @@ body.tint-dead .health-bar-fill { background: linear-gradient(90deg, #888, #aaa)
 body.tint-dead .health-bar-glow { background: linear-gradient(90deg, rgba(136,136,136,0.3), rgba(170,170,170,0.3)); }
 body.tint-dead .stat-card       { background: rgba(240,240,240,0.55); border-color: rgba(200,200,200,0.5); }
 body.tint-dead .manage-link:hover { color: #888; }
+
+/* ── Dark mode ────────────────────────────────────────────────────────── */
+html.dark, body.dark {
+  background: #111A13;
+}
+body.dark .orb-1 { background: radial-gradient(circle, rgba(40,120,65,0.4) 0%, transparent 70%); }
+body.dark .orb-2 { background: radial-gradient(circle, rgba(25,90,45,0.3) 0%, transparent 70%); }
+body.dark .orb-3 { background: radial-gradient(circle, rgba(55,140,80,0.2) 0%, transparent 70%); }
+
+body.dark .clock       { color: #C8E8D0; }
+body.dark .date        { color: rgba(180,220,190,0.45); }
+
+body.dark .state-pill  {
+  background: rgba(30,50,35,0.7);
+  border-color: rgba(80,160,100,0.3);
+  color: #90D8A8;
+}
+body.dark .health-pct-label { color: rgba(180,220,190,0.6); }
+body.dark .health-bar-bg    { background: rgba(255,255,255,0.07); }
+
+body.dark .stat-card {
+  background: rgba(20,40,25,0.65);
+  border-color: rgba(60,120,75,0.3);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.04);
+}
+body.dark .stat-value  { color: #C8E8D0; }
+body.dark .stat-label  { color: rgba(160,210,175,0.4); }
+
+body.dark .shortcut-icon {
+  background: rgba(20,40,25,0.65);
+  border-color: rgba(60,120,75,0.3);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.04);
+}
+body.dark .shortcut-icon .shortcut-letter { color: #6FD98A; }
+body.dark .shortcut-label { color: rgba(160,210,175,0.5); }
+
+body.dark .manage-link { color: rgba(160,210,175,0.3); }
+body.dark .manage-link:hover { color: #6FD98A; }
+
+/* dark + wilting */
+body.dark.tint-wilting { background: #1A1608; }
+body.dark.tint-wilting .clock { color: #E8D8A0; }
+body.dark.tint-wilting .stat-card { background: rgba(40,32,8,0.65); border-color: rgba(140,110,30,0.3); }
+body.dark.tint-wilting .stat-value { color: #E8D8A0; }
+
+/* dark + dead */
+body.dark.tint-dead { background: #141414; }
+body.dark.tint-dead .clock { color: #B0B0B0; }
+body.dark.tint-dead .stat-card { background: rgba(30,30,30,0.65); border-color: rgba(80,80,80,0.3); }
+body.dark.tint-dead .stat-value { color: #B0B0B0; }
