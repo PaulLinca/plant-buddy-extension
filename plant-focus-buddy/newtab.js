@@ -98,9 +98,55 @@ function fetchAndRender() {
   }
 }
 
+function initTestView() {
+  const STATES = [
+    { name: 'Thriving', health: 92 },
+    { name: 'Healthy',  health: 72 },
+    { name: 'Okay',     health: 47 },
+    { name: 'Wilting',  health: 20 },
+    { name: 'Dead',     health: 4  },
+  ];
+
+  const row = document.getElementById('test-states-row');
+  STATES.forEach(({ name, health }) => {
+    const card = document.createElement('div');
+    card.className = 'test-state-card';
+
+    const wrap = document.createElement('div');
+    wrap.className = 'test-plant-wrap';
+    renderPlant(health, wrap);
+
+    const label = document.createElement('div');
+    label.className = `test-state-name state-${name.toLowerCase()}`;
+    label.textContent = name;
+
+    const val = document.createElement('div');
+    val.className = 'test-health-val';
+    val.textContent = health + '%';
+
+    card.appendChild(wrap);
+    card.appendChild(label);
+    card.appendChild(val);
+    row.appendChild(card);
+  });
+
+  document.getElementById('test-toggle-btn').addEventListener('click', () => {
+    document.getElementById('test-overlay').classList.add('visible');
+  });
+  document.getElementById('test-close-btn').addEventListener('click', () => {
+    document.getElementById('test-overlay').classList.remove('visible');
+  });
+  document.getElementById('test-overlay').addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) {
+      e.currentTarget.classList.remove('visible');
+    }
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   updateClock();
   setInterval(updateClock, 1000);
+  initTestView();
 
   fetchAndRender();
   setInterval(fetchAndRender, 10000);

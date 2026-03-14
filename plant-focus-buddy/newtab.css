@@ -283,6 +283,116 @@ body.tint-dead .health-bar-glow { background: linear-gradient(90deg, rgba(136,13
 body.tint-dead .stat-card       { background: rgba(240,240,240,0.55); border-color: rgba(200,200,200,0.5); }
 body.tint-dead .manage-link:hover { color: #888; }
 
+/* ── Test toggle button ──────────────────────────────────────────────── */
+.test-toggle-btn {
+  background: none;
+  border: 1px solid rgba(30,60,35,0.2);
+  color: rgba(30,60,35,0.35);
+  border-radius: 20px;
+  padding: 4px 14px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.test-toggle-btn:hover {
+  border-color: #2E9E50;
+  color: #2E9E50;
+}
+
+/* ── Test overlay ────────────────────────────────────────────────────── */
+.test-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(6px);
+  align-items: center;
+  justify-content: center;
+}
+.test-overlay.visible { display: flex; }
+
+.test-panel {
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 24px 28px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 95vw;
+}
+
+.test-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.test-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1A2E22;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.test-close-btn {
+  background: rgba(0,0,0,0.07);
+  border: none;
+  border-radius: 50%;
+  width: 28px; height: 28px;
+  font-size: 13px;
+  cursor: pointer;
+  color: #555;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s;
+}
+.test-close-btn:hover { background: rgba(0,0,0,0.14); }
+
+.test-states-row {
+  display: flex;
+  gap: 16px;
+  align-items: flex-end;
+}
+
+.test-state-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.test-plant-wrap {
+  width: 100px;
+  height: 150px;
+}
+.test-plant-wrap svg { width: 100%; height: 100%; }
+
+.test-state-name {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #2E9E50;
+}
+.test-state-name.state-wilting { color: #C88020; }
+.test-state-name.state-dead    { color: #888; }
+.test-health-val {
+  font-size: 11px;
+  color: #aaa;
+  margin-top: -8px;
+}
+
+/* dark mode test panel */
+body.dark .test-panel {
+  background: rgba(20,35,25,0.95);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+body.dark .test-title  { color: #C0D8C8; }
+body.dark .test-close-btn { color: #aaa; background: rgba(255,255,255,0.07); }
+body.dark .test-close-btn:hover { background: rgba(255,255,255,0.12); }
+body.dark .test-toggle-btn { border-color: rgba(160,210,175,0.2); color: rgba(160,210,175,0.35); }
+body.dark .test-toggle-btn:hover { border-color: #6FD98A; color: #6FD98A; }
+
 /* ── Dark mode ────────────────────────────────────────────────────────── */
 html.dark, body.dark {
   background: #111A13;
