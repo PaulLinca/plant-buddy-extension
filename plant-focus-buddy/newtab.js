@@ -1,3 +1,7 @@
+chrome.storage.local.get('darkMode', ({ darkMode }) => {
+  if (darkMode) document.documentElement.classList.add('dark');
+});
+
 function formatTime(seconds) {
   if (seconds < 60) return seconds + 's';
   const m = Math.floor(seconds / 60);
