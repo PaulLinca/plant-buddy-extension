@@ -74,6 +74,7 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
   if (lastResetDate !== today) {
     if (plantHealth > 0) streak = (streak || 0) + 1;
     else streak = 0;
+    plantHealth = 70;
     sessionGoodTime = 0;
     sessionBadTime = 0;
     lastResetDate = today;
