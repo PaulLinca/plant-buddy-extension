@@ -84,6 +84,7 @@
 #pfb-overlay.pfb-position-top-left     { top:    72px; left:  16px; }
 
 #pfb-plant-wrap {
+    position: relative;
     pointer-events: auto;
     cursor: pointer;
     width:  100px;

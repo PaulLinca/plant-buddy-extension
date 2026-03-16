@@ -118,7 +118,7 @@ function initTestView() {
 
     const wrap = document.createElement('div');
     wrap.className = 'test-plant-wrap';
-    renderPlant(health, wrap);
+    wrap.dataset.health = health; // rendered lazily when overlay opens
 
     const label = document.createElement('div');
     label.className = `test-state-name state-${name.toLowerCase()}`;
@@ -135,7 +135,13 @@ function initTestView() {
   });
 
   document.getElementById('test-toggle-btn').addEventListener('click', () => {
-    document.getElementById('test-overlay').classList.add('visible');
+    const overlay = document.getElementById('test-overlay');
+    overlay.classList.add('visible');
+    // Render plants now that the overlay is visible and containers have layout dimensions.
+    overlay.querySelectorAll('.test-plant-wrap[data-health]').forEach(wrap => {
+      renderPlant(parseInt(wrap.dataset.health), wrap);
+      delete wrap.dataset.health;
+    });
   });
   document.getElementById('test-close-btn').addEventListener('click', () => {
     document.getElementById('test-overlay').classList.remove('visible');

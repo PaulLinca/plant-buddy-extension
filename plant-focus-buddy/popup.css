@@ -39,6 +39,7 @@ body {
 }
 
 .hero-plant-wrap {
+  position: relative;
   width: 72px;
   height: 108px;
   flex-shrink: 0;

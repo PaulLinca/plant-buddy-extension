@@ -250,6 +250,15 @@ function renderPlant(health, containerEl) {
         return;
     }
 
+    // Scale layer coordinates to fit the container, keeping all layers
+    // proportionally correct relative to each other as authored in plant-assets.js.
+    const canvas  = config.canvas || { width: 224, height: 290 };
+    const cW      = containerEl.offsetWidth  || canvas.width;
+    const cH      = containerEl.offsetHeight || canvas.height;
+    const scale   = Math.min(cW / canvas.width, cH / canvas.height);
+    const offsetX = (cW - canvas.width  * scale) / 2;
+    const offsetY = (cH - canvas.height * scale) / 2;
+
     const wrapper = document.createElement('div');
     wrapper.className = `pfb-plant-asset-wrap state-${state.toLowerCase()}`;
     Object.assign(wrapper.style, {
@@ -266,7 +275,16 @@ function renderPlant(health, containerEl) {
         _renderFallback(state, containerEl);
     }
 
-    (config.layers || []).forEach(layer => _renderLayer(layer, wrapper, onImageError));
+    (config.layers || []).forEach(layer => {
+        const scaled = {
+            ...layer,
+            x:      layer.x      * scale + offsetX,
+            y:      layer.y      * scale + offsetY,
+            width:  layer.width  * scale,
+            height: layer.height * scale,
+        };
+        _renderLayer(scaled, wrapper, onImageError);
+    });
 
     containerEl.appendChild(wrapper);
 }

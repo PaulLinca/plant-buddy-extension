@@ -84,6 +84,7 @@ body.tint-dead .orb-3 { background: radial-gradient(circle, rgba(180,180,180,0.1
 
 /* ── Plant ───────────────────────────────────────────────────────────── */
 .newtab-plant-wrap {
+  position: relative;
   width: 220px;
   height: 330px;
   filter: drop-shadow(0 12px 32px rgba(0,80,20,0.18));
@@ -362,8 +363,9 @@ body.tint-dead .manage-link:hover { color: #888; }
   gap: 10px;
 }
 .test-plant-wrap {
+  position: relative;
   width: 100px;
-  height: 150px;
+  height: 130px;
 }
 .test-plant-wrap svg { width: 100%; height: 100%; }
 
