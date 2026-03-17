@@ -2,18 +2,44 @@
     const url = (f) => chrome.runtime.getURL('assets/' + f);
 
     // Design canvas: all layer x/y/width/height are authored relative to this size.
-    // renderPlant will scale this canvas as a unit to fit any container.
     const canvas = { width: 224, height: 290 };
 
-    const pot = { src: url('pot.png'), x: 50, y: 162, width: 128, height: 128 };
-    const plant = (file, animation, duration) => ({
-        src: url(file), x: 0, y: 20, width: 224, height: 200,
-        animation, pivot: { x: 0.5, y: 1.0 }, duration
-    });
+    // Each plant type has 5 assets (one per health state), pot included in the image.
+    const TYPES = {
+        snake: {
+            THRIVING: 'snake-thriving.png',
+            HEALTHY:  'snake-healthy.png',
+            OKAY:     'snake-okay.png',
+            WILTING:  'snake-wilting.png',
+            DEAD:     'snake-dead.png',
+        },
+        monstera: {
+            THRIVING: 'monstera-thriving.png',
+            HEALTHY:  'monstera-healthy.png',
+            OKAY:     'monstera-okay.png',
+            WILTING:  'monstera-wilting.png',
+            DEAD:     'monstera-dead.png',
+        }
+    };
 
-    PlantAssets.register('THRIVING', { canvas, layers: [ pot, plant('plant-thriving.png', 'sway', 5)   ] });
-    PlantAssets.register('HEALTHY',  { canvas, layers: [ pot, plant('plant-healthy.png',  'sway', 5)   ] });
-    PlantAssets.register('OKAY',     { canvas, layers: [ pot, plant('plant-okay.png',     'sway', 6)   ] });
-    PlantAssets.register('WILTING',  { canvas, layers: [ pot, plant('plant-wilting.png',  'bob',  3.5) ] });
-    PlantAssets.register('DEAD',     { canvas, layers: [ pot, plant('plant-dead.png',     'none', 0)   ] });
+    function registerType(type) {
+        const states = TYPES[type] || TYPES.snake;
+        PlantAssets.clear();
+        Object.entries(states).forEach(([state, file]) => {
+            PlantAssets.register(state, {
+                canvas,
+                layers: [{
+                    src: url(file),
+                    x: 0, y: 0, width: 224, height: 290,
+                }]
+            });
+        });
+    }
+
+    PlantAssets.setType = function (type) {
+        registerType(type || 'snake');
+    };
+
+    // Default to snake plant on load
+    registerType('snake');
 })();

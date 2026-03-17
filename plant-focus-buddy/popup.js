@@ -53,17 +53,24 @@ function renderPositionButtons(currentPos) {
   });
 }
 
+function renderPlantTypeButtons(currentType) {
+  document.querySelectorAll('.plant-type-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.type === currentType);
+  });
+}
+
 function loadState() {
   chrome.runtime.sendMessage({ type: 'GET_STATE' }, (state) => {
     if (!state) return;
     appState = state;
-    const { plantHealth = 70, plantVisible = true, plantPosition = 'bottom-right', darkMode = false, goodSites = [], badSites = [] } = state;
+    const { plantHealth = 70, plantType = 'snake', plantVisible = true, plantPosition = 'bottom-right', darkMode = false, goodSites = [], badSites = [] } = state;
 
     document.body.classList.toggle('dark', darkMode);
     document.getElementById('dark-mode-toggle').checked = darkMode;
 
     // Plant header
     const plantWrap = document.getElementById('popup-plant-wrap');
+    PlantAssets.setType(plantType);
     renderPlant(plantHealth, plantWrap);
 
     // Health ring
@@ -79,6 +86,9 @@ function loadState() {
 
     // Toggle
     document.getElementById('plant-visible-toggle').checked = plantVisible;
+
+    // Plant type
+    renderPlantTypeButtons(plantType);
 
     // Position
     renderPositionButtons(plantPosition);
@@ -102,6 +112,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const darkMode = e.target.checked;
     await chrome.storage.local.set({ darkMode });
     document.body.classList.toggle('dark', darkMode);
+  });
+
+  // Plant type buttons
+  document.querySelectorAll('.plant-type-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      await chrome.storage.local.set({ plantType: btn.dataset.type });
+      renderPlantTypeButtons(btn.dataset.type);
+      PlantAssets.setType(btn.dataset.type);
+      const plantWrap = document.getElementById('popup-plant-wrap');
+      renderPlant(appState.plantHealth ?? 70, plantWrap);
+    });
   });
 
   // Position buttons

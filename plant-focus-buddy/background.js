@@ -4,6 +4,7 @@ function todayString() {
 
 const DEFAULTS = {
   plantHealth: 70,
+  plantType: 'snake',
   goodSites: ['notion.so', 'github.com', 'docs.google.com', 'linear.app'],
   badSites: ['reddit.com', 'youtube.com', 'twitter.com', 'x.com', 'instagram.com'],
   plantVisible: true,
