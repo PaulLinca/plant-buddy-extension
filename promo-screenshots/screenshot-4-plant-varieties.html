@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>Plant Focus Buddy – Screenshot 4</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1280px;
+    height: 800px;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+  }
+
+  .page {
+    width: 100%;
+    height: 100%;
+    background: #fafaf8;
+    background: linear-gradient(155deg, #f8fffe 0%, #fafaf8 40%, #fff8f0 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 64px;
+    padding: 60px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Subtle decorative circles */
+  .deco-circle {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .dc-1 {
+    width: 500px; height: 500px;
+    border: 1px solid rgba(34,197,94,0.08);
+    top: -120px; right: -80px;
+  }
+  .dc-2 {
+    width: 300px; height: 300px;
+    border: 1px solid rgba(34,197,94,0.06);
+    bottom: -60px; left: -40px;
+  }
+
+  /* Left text column */
+  .left {
+    flex: 0 0 340px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .eyebrow {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #16a34a;
+  }
+
+  h1 {
+    font-size: 48px;
+    font-weight: 800;
+    color: #111827;
+    letter-spacing: -0.02em;
+    line-height: 1.08;
+  }
+  h1 span {
+    background: linear-gradient(135deg, #15803d, #22c55e);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .desc {
+    font-size: 17px;
+    color: #6b7280;
+    line-height: 1.6;
+  }
+
+  .plant-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .plant-option {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
+    border-radius: 14px;
+    border: 1.5px solid transparent;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .plant-option.selected {
+    background: #f0fdf4;
+    border-color: #22c55e;
+    box-shadow: 0 2px 8px rgba(34,197,94,0.12);
+  }
+  .plant-option:not(.selected) {
+    background: #f9fafb;
+    border-color: #e5e7eb;
+  }
+  .option-thumb {
+    height: 40px;
+    width: 40px;
+    object-fit: contain;
+  }
+  .option-info {}
+  .option-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: #111827;
+  }
+  .option-name.selected { color: #15803d; }
+  .option-trait {
+    font-size: 12px;
+    color: #9ca3af;
+    font-weight: 400;
+  }
+  .option-check {
+    margin-left: auto;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: #22c55e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: white;
+  }
+
+  /* Right: large featured plant + mini states */
+  .right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .featured-plant-card {
+    width: 100%;
+    background: white;
+    border-radius: 24px;
+    border: 1.5px solid #e5e7eb;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.04);
+    padding: 32px 28px 24px;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+
+  .featured-main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    flex: 0 0 auto;
+  }
+  .featured-plant-img {
+    height: 250px;
+    object-fit: contain;
+    filter: drop-shadow(0 12px 24px rgba(34,197,94,0.2));
+  }
+  .featured-label {
+    font-size: 20px;
+    font-weight: 800;
+    color: #111827;
+    letter-spacing: -0.01em;
+  }
+  .featured-sublabel {
+    font-size: 13px;
+    color: #9ca3af;
+  }
+
+  .featured-states {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .featured-states-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #9ca3af;
+    margin-bottom: 4px;
+  }
+  .state-mini-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    background: #f9fafb;
+  }
+  .state-mini-img {
+    height: 36px;
+    width: 36px;
+    object-fit: contain;
+  }
+  .state-mini-info {
+    flex: 1;
+  }
+  .state-mini-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: #374151;
+  }
+  .state-mini-bar-bg {
+    height: 4px;
+    background: #e5e7eb;
+    border-radius: 2px;
+    margin-top: 4px;
+    overflow: hidden;
+  }
+  .state-mini-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+  }
+  .fill-thriving { width: 92%; background: #22c55e; }
+  .fill-healthy  { width: 72%; background: #84cc16; }
+  .fill-okay     { width: 47%; background: #eab308; }
+  .fill-wilting  { width: 22%; background: #f97316; }
+  .fill-dead     { width: 5%;  background: #ef4444; }
+  .state-mini-pct {
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .pct-thriving { color: #22c55e; }
+  .pct-healthy  { color: #84cc16; }
+  .pct-okay     { color: #eab308; }
+  .pct-wilting  { color: #f97316; }
+  .pct-dead     { color: #ef4444; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="deco-circle dc-1"></div>
+  <div class="deco-circle dc-2"></div>
+
+  <div class="left">
+    <div class="eyebrow">Pick your companion</div>
+    <h1>4 plants,<br><span>your choice</span></h1>
+    <p class="desc">Pick the plant that matches your vibe. Each variety has unique artwork across all 5 health states.</p>
+
+    <div class="plant-selector">
+      <div class="plant-option selected">
+        <img class="option-thumb" src="../plant-focus-buddy/assets/monstera-thriving.png" alt="Monstera">
+        <div class="option-info">
+          <div class="option-name selected">Monstera</div>
+          <div class="option-trait">Bold & tropical</div>
+        </div>
+        <div class="option-check">✓</div>
+      </div>
+      <div class="plant-option">
+        <img class="option-thumb" src="../plant-focus-buddy/assets/snake-healthy.png" alt="Snake Plant">
+        <div class="option-info">
+          <div class="option-name">Snake Plant</div>
+          <div class="option-trait">Classic & architectural</div>
+        </div>
+      </div>
+      <div class="plant-option">
+        <img class="option-thumb" src="../plant-focus-buddy/assets/pothos-healthy.png" alt="Pothos">
+        <div class="option-info">
+          <div class="option-name">Pothos</div>
+          <div class="option-trait">Lush & trailing</div>
+        </div>
+      </div>
+      <div class="plant-option">
+        <img class="option-thumb" src="../plant-focus-buddy/assets/lily-healthy.png" alt="Peace Lily">
+        <div class="option-info">
+          <div class="option-name">Peace Lily</div>
+          <div class="option-trait">Elegant & serene</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="featured-plant-card">
+      <div class="featured-main">
+        <img class="featured-plant-img" src="../plant-focus-buddy/assets/monstera-thriving.png" alt="Monstera Thriving">
+        <div class="featured-label">Monstera</div>
+        <div class="featured-sublabel">Currently Thriving 🌿</div>
+      </div>
+
+      <div class="featured-states">
+        <div class="featured-states-label">All health states</div>
+
+        <div class="state-mini-row">
+          <img class="state-mini-img" src="../plant-focus-buddy/assets/monstera-thriving.png" alt="Thriving">
+          <div class="state-mini-info">
+            <div class="state-mini-name">Thriving</div>
+            <div class="state-mini-bar-bg"><div class="state-mini-bar-fill fill-thriving"></div></div>
+          </div>
+          <div class="state-mini-pct pct-thriving">85–100%</div>
+        </div>
+
+        <div class="state-mini-row">
+          <img class="state-mini-img" src="../plant-focus-buddy/assets/monstera-healthy.png" alt="Healthy">
+          <div class="state-mini-info">
+            <div class="state-mini-name">Healthy</div>
+            <div class="state-mini-bar-bg"><div class="state-mini-bar-fill fill-healthy"></div></div>
+          </div>
+          <div class="state-mini-pct pct-healthy">60–84%</div>
+        </div>
+
+        <div class="state-mini-row">
+          <img class="state-mini-img" src="../plant-focus-buddy/assets/monstera-okay.png" alt="Okay">
+          <div class="state-mini-info">
+            <div class="state-mini-name">Okay</div>
+            <div class="state-mini-bar-bg"><div class="state-mini-bar-fill fill-okay"></div></div>
+          </div>
+          <div class="state-mini-pct pct-okay">35–59%</div>
+        </div>
+
+        <div class="state-mini-row">
+          <img class="state-mini-img" src="../plant-focus-buddy/assets/monstera-wilting.png" alt="Wilting">
+          <div class="state-mini-info">
+            <div class="state-mini-name">Wilting</div>
+            <div class="state-mini-bar-bg"><div class="state-mini-bar-fill fill-wilting"></div></div>
+          </div>
+          <div class="state-mini-pct pct-wilting">10–34%</div>
+        </div>
+
+        <div class="state-mini-row">
+          <img class="state-mini-img" src="../plant-focus-buddy/assets/monstera-dead.png" alt="Dead">
+          <div class="state-mini-info">
+            <div class="state-mini-name">Dead</div>
+            <div class="state-mini-bar-bg"><div class="state-mini-bar-fill fill-dead"></div></div>
+          </div>
+          <div class="state-mini-pct pct-dead">0–9%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

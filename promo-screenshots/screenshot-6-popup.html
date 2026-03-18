@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>Plant Focus Buddy – Screenshot 6</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1280px;
+    height: 800px;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+  }
+
+  .page {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(155deg, #f0fdf4 0%, #fefefe 50%, #fffbeb 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 72px;
+    padding: 60px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .page::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, rgba(0,0,0,0.03) 1px, transparent 1px);
+    background-size: 24px 24px;
+    pointer-events: none;
+  }
+
+  /* Left: copy */
+  .left {
+    flex: 0 0 420px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .eyebrow {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #16a34a;
+  }
+
+  h1 {
+    font-size: 48px;
+    font-weight: 800;
+    color: #111827;
+    letter-spacing: -0.02em;
+    line-height: 1.08;
+  }
+  h1 span {
+    background: linear-gradient(135deg, #15803d, #22c55e);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .desc {
+    font-size: 18px;
+    color: #6b7280;
+    line-height: 1.65;
+  }
+
+  .feature-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .feat {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .feat-icon-wrap {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .feat-text { font-size: 15px; color: #374151; line-height: 1.5; }
+  .feat-text strong { color: #111827; font-weight: 700; }
+
+  /* Right: popup mockup */
+  .right {
+    flex: 0 0 auto;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Backdrop blur effect / browser chrome hint */
+  .popup-context {
+    position: relative;
+  }
+
+  .toolbar-hint {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    background: #2d2d2d;
+    border-radius: 12px 12px 0 0;
+    padding: 8px 12px;
+    gap: 6px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .toolbar-ext-icon {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+  }
+  .toolbar-ext-icon.active {
+    background: rgba(74,222,128,0.25);
+    border: 1.5px solid rgba(74,222,128,0.5);
+    box-shadow: 0 0 12px rgba(74,222,128,0.2);
+  }
+  .toolbar-ext-icon:not(.active) { background: rgba(255,255,255,0.06); }
+
+  /* The popup itself */
+  .popup {
+    width: 320px;
+    background: #ffffff;
+    border-radius: 0 0 16px 16px;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.18), 0 4px 12px rgba(0,0,0,0.08);
+    overflow: hidden;
+    border: 1px solid rgba(0,0,0,0.06);
+    border-top: none;
+  }
+
+  /* Popup hero */
+  .popup-hero {
+    background: linear-gradient(135deg, #166534 0%, #22c55e 100%);
+    padding: 20px 20px 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: relative;
+  }
+  .hero-plant {
+    height: 72px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.25));
+    flex-shrink: 0;
+  }
+  .hero-right {
+    flex: 1;
+  }
+  .hero-app-name {
+    font-size: 15px;
+    font-weight: 800;
+    color: white;
+    letter-spacing: -0.01em;
+    margin-bottom: 8px;
+  }
+  .hero-health {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  /* Circular health ring */
+  .ring-svg { width: 44px; height: 44px; }
+  .ring-track { fill: none; stroke: rgba(255,255,255,0.2); stroke-width: 4; }
+  .ring-fill {
+    fill: none;
+    stroke: #ffffff;
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-dasharray: 113;
+    stroke-dashoffset: 14; /* ~88% */
+    transform: rotate(-90deg);
+    transform-origin: 22px 22px;
+  }
+  .ring-text {
+    fill: white;
+    font-size: 11px;
+    font-weight: 800;
+    text-anchor: middle;
+    dominant-baseline: middle;
+  }
+  .hero-state {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .state-name {
+    font-size: 14px;
+    font-weight: 800;
+    color: white;
+  }
+  .state-sub {
+    font-size: 11px;
+    color: rgba(255,255,255,0.65);
+  }
+
+  /* Section cards */
+  .section {
+    border-top: 1px solid #f3f4f6;
+    padding: 14px 16px;
+  }
+  .section-title {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #9ca3af;
+    margin-bottom: 10px;
+  }
+
+  /* Toggle row */
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px 0;
+    border-bottom: 1px solid #f9fafb;
+  }
+  .toggle-row:last-child { border-bottom: none; }
+  .toggle-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #374151;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .toggle-label-icon { font-size: 15px; }
+  .toggle {
+    width: 36px; height: 20px;
+    border-radius: 10px;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .toggle.on { background: #22c55e; }
+  .toggle.off { background: #d1d5db; }
+  .toggle-knob {
+    position: absolute;
+    width: 16px; height: 16px;
+    background: white;
+    border-radius: 50%;
+    top: 2px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    transition: left 0.15s;
+  }
+  .toggle.on .toggle-knob { left: 18px; }
+  .toggle.off .toggle-knob { left: 2px; }
+
+  /* Plant type grid */
+  .plant-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  .plant-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1.5px solid transparent;
+    cursor: pointer;
+  }
+  .plant-btn.active {
+    border-color: #22c55e;
+    background: #f0fdf4;
+  }
+  .plant-btn:not(.active) {
+    border-color: #e5e7eb;
+    background: #f9fafb;
+  }
+  .plant-btn-img {
+    height: 28px;
+    width: 24px;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+  .plant-btn-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: #374151;
+  }
+  .plant-btn.active .plant-btn-name { color: #15803d; }
+
+  /* Position buttons */
+  .position-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  .pos-btn {
+    padding: 7px 10px;
+    border-radius: 8px;
+    border: 1.5px solid #e5e7eb;
+    background: #f9fafb;
+    font-size: 11px;
+    font-weight: 600;
+    color: #6b7280;
+    text-align: center;
+    cursor: pointer;
+  }
+  .pos-btn.active {
+    border-color: #22c55e;
+    background: #f0fdf4;
+    color: #15803d;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="left">
+    <div class="eyebrow">Quick access</div>
+    <h1>Everything in<br>your <span>toolbar</span></h1>
+    <p class="desc">The popup gives you a real-time health snapshot and full control — without leaving the page you're on.</p>
+
+    <div class="feature-list">
+      <div class="feat">
+        <div class="feat-text"><strong>Live health ring</strong> — see your plant's current state at a glance</div>
+      </div>
+      <div class="feat">
+        <div class="feat-text"><strong>Dark mode</strong> — seamlessly follows your preference</div>
+      </div>
+      <div class="feat">
+        <div class="feat-text"><strong>Switch plant types</strong> — four unique species to choose from</div>
+      </div>
+      <div class="feat">
+        <div class="feat-text"><strong>Position the overlay</strong> — pick any corner of your screen</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="popup-context">
+      <!-- Simulated toolbar context -->
+      <div class="toolbar-hint">
+        <div class="toolbar-ext-icon active"></div>
+      </div>
+
+      <!-- Popup -->
+      <div class="popup">
+        <!-- Hero -->
+        <div class="popup-hero">
+          <img class="hero-plant" src="../plant-focus-buddy/assets/snake-thriving.png" alt="Snake Plant">
+          <div class="hero-right">
+            <div class="hero-app-name">Plant Focus Buddy</div>
+            <div class="hero-health">
+              <svg class="ring-svg" viewBox="0 0 44 44">
+                <circle class="ring-track" cx="22" cy="22" r="18"/>
+                <circle class="ring-fill" cx="22" cy="22" r="18"/>
+                <text class="ring-text" x="22" y="22">88%</text>
+              </svg>
+              <div class="hero-state">
+                <div class="state-sub">Great focus today!</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Settings -->
+        <div class="section">
+          <div class="section-title">Display</div>
+          <div class="toggle-row">
+            <div class="toggle-label"> Show on all pages</div>
+            <div class="toggle on"><div class="toggle-knob"></div></div>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-label">Dark mode</div>
+            <div class="toggle off"><div class="toggle-knob"></div></div>
+          </div>
+        </div>
+
+        <!-- Plant type -->
+        <div class="section">
+          <div class="section-title">Plant Type</div>
+          <div class="plant-grid">
+            <div class="plant-btn active">
+              <img class="plant-btn-img" src="../plant-focus-buddy/assets/snake-healthy.png" alt="Snake">
+              <div class="plant-btn-name">Snake Plant</div>
+            </div>
+            <div class="plant-btn">
+              <img class="plant-btn-img" src="../plant-focus-buddy/assets/monstera-healthy.png" alt="Monstera">
+              <div class="plant-btn-name">Monstera</div>
+            </div>
+            <div class="plant-btn">
+              <img class="plant-btn-img" src="../plant-focus-buddy/assets/pothos-healthy.png" alt="Pothos">
+              <div class="plant-btn-name">Pothos</div>
+            </div>
+            <div class="plant-btn">
+              <img class="plant-btn-img" src="../plant-focus-buddy/assets/lily-healthy.png" alt="Lily">
+              <div class="plant-btn-name">Peace Lily</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Position -->
+        <div class="section">
+          <div class="section-title">Overlay Position</div>
+          <div class="position-grid">
+            <div class="pos-btn">↖ Top-Left</div>
+            <div class="pos-btn">↗ Top-Right</div>
+            <div class="pos-btn">↙ Bottom-Left</div>
+            <div class="pos-btn active">↘ Bottom-Right</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

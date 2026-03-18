@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>Plant Focus Buddy – Screenshot 5</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1280px;
+    height: 800px;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+    background: #080f08;
+  }
+
+  .page {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Simulated browser context - light back panel */
+  .browser-context {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #1c1c1e 0%, #111 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Chrome browser frame */
+  .browser-frame {
+    width: 1180px;
+    height: 720px;
+    background: #202020;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.06);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Chrome UI */
+  .chrome-top {
+    background: #2d2d2d;
+    height: 90px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .chrome-tabs-bar {
+    display: flex;
+    align-items: flex-end;
+    padding: 8px 12px 0;
+    gap: 2px;
+    flex: 1;
+  }
+  .chrome-tab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #1e1e1e;
+    border-radius: 8px 8px 0 0;
+    padding: 8px 16px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+    white-space: nowrap;
+    min-width: 160px;
+    max-width: 200px;
+  }
+  .chrome-tab.active {
+    background: #1a2e1a;
+    color: rgba(255,255,255,0.9);
+  }
+  .tab-icon { font-size: 14px; }
+  .tab-x { margin-left: auto; font-size: 10px; opacity: 0.5; }
+
+  .chrome-toolbar {
+    height: 40px;
+    background: #2d2d2d;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    gap: 8px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .nav-btn {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.3);
+    font-size: 14px;
+  }
+  .address-bar {
+    flex: 1;
+    height: 28px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    gap: 6px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+  }
+  .lock-icon { font-size: 11px; opacity: 0.6; }
+  .ext-icons {
+    display: flex;
+    gap: 4px;
+  }
+  .ext-icon {
+    width: 26px; height: 26px;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.06);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+  .ext-icon.active {
+    background: rgba(74,222,128,0.2);
+    border: 1px solid rgba(74,222,128,0.3);
+  }
+
+  /* New Tab Content */
+  .newtab-page {
+    flex: 1;
+    background: linear-gradient(160deg, #0f1e0f 0%, #0c170c 50%, #141208 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 40px 32px;
+    gap: 8px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .nt-bg-glow {
+    position: absolute;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(34,197,94,0.07) 0%, transparent 65%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -55%);
+    pointer-events: none;
+  }
+
+  /* Time */
+  .nt-time {
+    font-size: 72px;
+    font-weight: 200;
+    color: rgba(255,255,255,0.9);
+    letter-spacing: 0.04em;
+    line-height: 1;
+  }
+  .nt-date {
+    font-size: 14px;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+  }
+
+  /* Plant */
+  .nt-plant-area {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    height: 200px;
+    position: relative;
+  }
+  .nt-plant-img {
+    height: 190px;
+    object-fit: contain;
+    filter: drop-shadow(0 16px 32px rgba(74,222,128,0.25));
+    position: relative;
+    z-index: 1;
+  }
+  .nt-plant-shadow {
+    position: absolute;
+    bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 120px; height: 12px;
+    background: radial-gradient(ellipse, rgba(0,0,0,0.3) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  /* State + health */
+  .nt-state-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(74,222,128,0.12);
+    border: 1px solid rgba(74,222,128,0.3);
+    color: #4ade80;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 100px;
+  }
+  .state-dot { width: 6px; height: 6px; border-radius: 50%; background: #4ade80; }
+
+  .nt-health-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 300px;
+  }
+  .nt-hb-bg {
+    flex: 1;
+    height: 6px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .nt-hb-fill {
+    height: 100%;
+    width: 88%;
+    background: linear-gradient(90deg, #16a34a, #22c55e, #4ade80);
+    border-radius: 3px;
+    box-shadow: 0 0 10px rgba(74,222,128,0.5);
+  }
+  .nt-hb-pct {
+    font-size: 14px;
+    font-weight: 800;
+    color: #4ade80;
+  }
+
+  /* Stats */
+  .nt-stats-row {
+    display: flex;
+    gap: 12px;
+    width: 480px;
+  }
+  .nt-stat {
+    flex: 1;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px;
+    padding: 12px 16px;
+    text-align: center;
+  }
+  .nt-stat-label {
+    font-size: 10px;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .nt-stat-val {
+    font-size: 18px;
+    font-weight: 800;
+    color: #fff;
+  }
+  .nt-stat-val.green { color: #4ade80; }
+  .nt-stat-val.amber { color: #fbbf24; }
+
+  /* Shortcuts */
+  .nt-shortcuts {
+    display: flex;
+    gap: 10px;
+  }
+  .shortcut-btn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 8px 14px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .shortcut-icon { font-size: 16px; }
+
+  /* Annotation callouts */
+  .callout {
+    position: absolute;
+    z-index: 10;
+  }
+  .callout-line {
+    position: absolute;
+    background: rgba(74,222,128,0.4);
+    transform-origin: top left;
+  }
+  .callout-bubble {
+    background: rgba(74,222,128,0.15);
+    border: 1px solid rgba(74,222,128,0.4);
+    border-radius: 10px;
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #4ade80;
+    white-space: nowrap;
+    backdrop-filter: blur(8px);
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="browser-context"></div>
+
+  <div class="browser-frame">
+    <!-- Chrome top bar -->
+    <div class="chrome-top">
+      <div class="chrome-tabs-bar">
+        <div class="chrome-tab active">
+          <span class="tab-icon">🌿</span>
+          New Tab
+          <span class="tab-x">×</span>
+        </div>
+        <div class="chrome-tab">
+          <span class="tab-icon">🐙</span>
+          GitHub – Pull reques...
+          <span class="tab-x">×</span>
+        </div>
+        <div class="chrome-tab">
+          <span class="tab-icon">📝</span>
+          Q1 Planning – Notion
+          <span class="tab-x">×</span>
+        </div>
+      </div>
+      <div class="chrome-toolbar">
+        <div class="nav-btn">‹</div>
+        <div class="nav-btn" style="opacity:0.3">›</div>
+        <div class="nav-btn">↻</div>
+        <div class="address-bar">
+          <span class="lock-icon">🔒</span>
+          chrome://newtab
+        </div>
+        <div class="ext-icons">
+          <div class="ext-icon active">🌿</div>
+          <div class="ext-icon">⚙️</div>
+          <div class="ext-icon">🔒</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- New Tab Page -->
+    <div class="newtab-page">
+      <div class="nt-bg-glow"></div>
+
+      <div class="nt-time">10:42</div>
+      <div class="nt-date">Wednesday, March 18, 2026</div>
+
+      <div class="nt-plant-area">
+        <img class="nt-plant-img" src="../plant-focus-buddy/assets/pothos-thriving.png" alt="Pothos Thriving">
+        <div class="nt-plant-shadow"></div>
+      </div>
+
+      <div class="nt-state-pill">
+        <div class="state-dot"></div>
+        Thriving
+      </div>
+
+      <div class="nt-health-row">
+        <div class="nt-hb-bg">
+          <div class="nt-hb-fill"></div>
+        </div>
+        <div class="nt-hb-pct">88%</div>
+      </div>
+
+      <div class="nt-stats-row">
+        <div class="nt-stat">
+          <div class="nt-stat-label">Focus Time</div>
+          <div class="nt-stat-val green">1h 38m</div>
+        </div>
+        <div class="nt-stat">
+          <div class="nt-stat-label">Distracted</div>
+          <div class="nt-stat-val amber">11m</div>
+        </div>
+        <div class="nt-stat">
+          <div class="nt-stat-label">Day Streak</div>
+          <div class="nt-stat-val">🔥 12</div>
+        </div>
+      </div>
+
+      <div class="nt-shortcuts">
+        <div class="shortcut-btn"><span class="shortcut-icon">🐙</span> github.com</div>
+        <div class="shortcut-btn"><span class="shortcut-icon">📝</span> notion.so</div>
+        <div class="shortcut-btn"><span class="shortcut-icon">📄</span> docs.google.com</div>
+        <div class="shortcut-btn"><span class="shortcut-icon">📋</span> linear.app</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating label overlay -->
+  <div style="position:absolute; top:44px; left:50px; z-index:20; background:rgba(0,0,0,0.7); border:1px solid rgba(74,222,128,0.4); border-radius:12px; padding:12px 20px; color:#4ade80; font-size:14px; font-weight:700; backdrop-filter:blur(12px);">
+    🌿 Replaces your new tab page
+  </div>
+</div>
+</body>
+</html>

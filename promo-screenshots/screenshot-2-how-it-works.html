@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>Plant Focus Buddy – Screenshot 2</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1280px;
+    height: 800px;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+    background: #fafaf8;
+  }
+
+  .page {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(170deg, #f0fdf4 0%, #fafaf8 50%, #fff7ed 100%);
+    position: relative;
+    padding: 48px 80px;
+    gap: 44px;
+  }
+
+  /* Subtle grid bg */
+  .page::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, rgba(0,0,0,0.04) 1px, transparent 1px);
+    background-size: 28px 28px;
+    pointer-events: none;
+  }
+
+  .header {
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+  .eyebrow {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #16a34a;
+    margin-bottom: 10px;
+  }
+  h1 {
+    font-size: 44px;
+    font-weight: 800;
+    color: #1a1a1a;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  h1 span { color: #16a34a; }
+  .subtitle {
+    font-size: 18px;
+    color: #666;
+    margin-top: 8px;
+  }
+
+  /* Three-column layout */
+  .cols {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    width: 100%;
+    max-width: 1100px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Arrow connector */
+  .arrow {
+    flex: 0 0 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: #d1d5db;
+  }
+
+  /* Column card */
+  .col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  .card {
+    width: 100%;
+    background: #ffffff;
+    border-radius: 20px;
+    border: 1.5px solid #e5e7eb;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
+    overflow: hidden;
+  }
+
+  /* Site list card */
+  .sites-card {
+    padding: 24px;
+  }
+  .sites-card-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .sites-card-title.green { color: #16a34a; }
+  .sites-card-title.red { color: #dc2626; }
+  .title-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+  }
+  .dot-green { background: #22c55e; }
+  .dot-red { background: #ef4444; }
+
+  .site-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 10px;
+    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .site-item.good { background: #f0fdf4; color: #166534; }
+  .site-item.bad { background: #fef2f2; color: #991b1b; }
+  .site-favicon {
+    width: 18px; height: 18px;
+    border-radius: 4px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .card-label {
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    padding: 14px;
+    background: #f9fafb;
+    border-top: 1px solid #f0f0f0;
+    color: #374151;
+  }
+
+  /* Plant health card */
+  .health-card {
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .health-comparison {
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .plant-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+  }
+  .plant-img {
+    height: 110px;
+    object-fit: contain;
+  }
+  .state-badge {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 100px;
+  }
+  .state-badge.thriving {
+    background: #dcfce7;
+    color: #15803d;
+  }
+  .state-badge.wilting {
+    background: #fef3c7;
+    color: #92400e;
+  }
+  .state-badge.dead {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+
+  .vs-divider {
+    width: 2px;
+    height: 80px;
+    background: linear-gradient(to bottom, transparent, #e5e7eb, transparent);
+    flex-shrink: 0;
+    margin-bottom: 30px;
+  }
+
+  .health-bar-section {
+    width: 100%;
+  }
+  .hb-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: #9ca3af;
+    margin-bottom: 6px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .hb-track {
+    height: 10px;
+    border-radius: 5px;
+    background: #f3f4f6;
+    overflow: hidden;
+    position: relative;
+  }
+  .hb-fill {
+    height: 100%;
+    border-radius: 5px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    transition: width 0.3s;
+  }
+  .hb-fill.good-fill {
+    width: 85%;
+    background: linear-gradient(90deg, #22c55e, #4ade80);
+  }
+  .hb-fill.bad-fill {
+    width: 22%;
+    background: linear-gradient(90deg, #ef4444, #f87171);
+  }
+
+  /* Extension popup card */
+  .popup-mock {
+    width: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1.5px solid #e5e7eb;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+  .popup-header {
+    background: linear-gradient(135deg, #166534, #22c55e);
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    color: white;
+  }
+  .popup-plant-thumb {
+    height: 56px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+  }
+  .popup-header-text {}
+  .popup-app-name {
+    font-size: 15px;
+    font-weight: 700;
+    opacity: 0.95;
+  }
+  .popup-health-ring {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 2px;
+  }
+  .ring-bar {
+    width: 80px;
+    height: 5px;
+    background: rgba(255,255,255,0.25);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .ring-fill {
+    height: 100%;
+    width: 88%;
+    background: white;
+    border-radius: 3px;
+  }
+  .ring-pct {
+    font-size: 12px;
+    font-weight: 700;
+    opacity: 0.9;
+  }
+
+  .popup-body {
+    background: white;
+    padding: 14px;
+  }
+  .popup-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 4px;
+    border-bottom: 1px solid #f3f4f6;
+    font-size: 12px;
+    color: #374151;
+    font-weight: 500;
+  }
+  .popup-row:last-child { border-bottom: none; }
+  .toggle-pill {
+    width: 32px; height: 18px;
+    background: #22c55e;
+    border-radius: 9px;
+    position: relative;
+  }
+  .toggle-thumb {
+    position: absolute;
+    width: 14px; height: 14px;
+    background: white;
+    border-radius: 50%;
+    top: 2px; right: 2px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  }
+  .popup-label-card {
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    padding: 14px;
+    background: #f9fafb;
+    border-top: 1px solid #f0f0f0;
+    color: #374151;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <div class="eyebrow">How it works</div>
+    <h1>Your browsing shapes your <span>plant's health</span></h1>
+    <p class="subtitle">Visit focus sites to make it thrive. Get distracted and watch it wilt.</p>
+  </div>
+
+  <div class="cols">
+    <!-- Column 1: Sites you set -->
+    <div class="col">
+      <div class="card">
+        <div class="sites-card">
+          <div class="sites-card-title green">
+            <div class="title-dot dot-green"></div>
+            Focus Sites
+          </div>
+          <div class="site-item good"> github.com</div>
+          <div class="site-item good"> notion.so</div>
+          <div class="site-item good"> docs.google.com</div>
+          <div class="site-item good"> linear.app</div>
+
+          <div class="sites-card-title red" style="margin-top: 18px;">
+            <div class="title-dot dot-red"></div>
+            Distraction Sites
+          </div>
+          <div class="site-item bad"> youtube.com</div>
+          <div class="site-item bad"> twitter.com</div>
+          <div class="site-item bad"> instagram.com</div>
+        </div>
+        <div class="card-label">1. You define what matters</div>
+      </div>
+    </div>
+
+    <div class="arrow">→</div>
+
+    <!-- Column 2: Plant health -->
+    <div class="col">
+      <div class="card">
+        <div class="health-card">
+          <div class="health-comparison">
+            <div class="plant-state">
+              <img class="plant-img" src="../plant-focus-buddy/assets/monstera-thriving.png" alt="Thriving">
+              <div class="state-badge thriving">Thriving</div>
+            </div>
+            <div class="vs-divider"></div>
+            <div class="plant-state">
+              <img class="plant-img" src="../plant-focus-buddy/assets/monstera-wilting.png" alt="Wilting">
+              <div class="state-badge wilting">Wilting</div>
+            </div>
+          </div>
+
+          <div class="health-bar-section">
+            <div class="hb-labels">
+              <span>Focused browsing</span>
+              <span>85%</span>
+            </div>
+            <div class="hb-track">
+              <div class="hb-fill good-fill"></div>
+            </div>
+          </div>
+          <div class="health-bar-section">
+            <div class="hb-labels">
+              <span>Distracted browsing</span>
+              <span>22%</span>
+            </div>
+            <div class="hb-track">
+              <div class="hb-fill bad-fill"></div>
+            </div>
+          </div>
+        </div>
+        <div class="card-label">2. Plant health reflects your focus</div>
+      </div>
+    </div>
+
+    <div class="arrow">→</div>
+
+    <!-- Column 3: Popup -->
+    <div class="col">
+      <div class="popup-mock">
+        <div class="popup-header">
+          <img class="popup-plant-thumb" src="../plant-focus-buddy/assets/monstera-thriving.png" alt="Plant">
+          <div class="popup-header-text">
+            <div class="popup-app-name">Plant Focus Buddy</div>
+            <div class="popup-health-ring">
+              <div class="ring-bar"><div class="ring-fill"></div></div>
+              <div class="ring-pct">88%</div>
+            </div>
+          </div>
+        </div>
+        <div class="popup-body">
+          <div class="popup-row">
+            <span>Show on all pages</span>
+            <div class="toggle-pill"><div class="toggle-thumb"></div></div>
+          </div>
+          <div class="popup-row">
+            <span>Dark mode</span>
+            <div class="toggle-pill" style="background:#e5e7eb;"><div class="toggle-thumb" style="right:auto;left:2px;"></div></div>
+          </div>
+          <div class="popup-row">
+            <span>Plant type</span>
+            <span style="color:#6b7280;">Snake Plant ›</span>
+          </div>
+          <div class="popup-row">
+            <span>Position</span>
+            <span style="color:#6b7280;">Bottom-Right ›</span>
+          </div>
+        </div>
+        <div class="popup-label-card">3. Stay aware — right in your toolbar</div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

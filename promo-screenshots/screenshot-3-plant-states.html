@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>Plant Focus Buddy – Screenshot 3</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1280px;
+    height: 800px;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+  }
+
+  .page {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(175deg, #0f1a0f 0%, #111a11 40%, #1a1000 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 80px;
+    gap: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Background accent */
+  .page::before {
+    content: '';
+    position: absolute;
+    width: 800px; height: 800px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(74,222,128,0.06) 0%, transparent 60%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .header {
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+  .eyebrow {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #4ade80;
+    margin-bottom: 10px;
+  }
+  h1 {
+    font-size: 44px;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  .subtitle {
+    font-size: 17px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 8px;
+  }
+
+  .states-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 1100px;
+    justify-content: center;
+  }
+
+  .state-card {
+    flex: 1;
+    max-width: 190px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    padding: 24px 16px 20px;
+    gap: 14px;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Active highlight */
+  .state-card.active {
+    background: rgba(74,222,128,0.08);
+    border-color: rgba(74,222,128,0.3);
+    box-shadow: 0 0 30px rgba(74,222,128,0.1), inset 0 1px 0 rgba(255,255,255,0.05);
+  }
+  .state-card.active::before {
+    content: 'YOUR PLANT TODAY';
+    position: absolute;
+    top: -1px; left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(90deg, #22c55e, #4ade80);
+    color: #052e16;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    padding: 4px 10px;
+    border-radius: 0 0 8px 8px;
+    white-space: nowrap;
+  }
+
+  .plant-img-wrap {
+    height: 160px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .plant-img {
+    max-height: 155px;
+    max-width: 140px;
+    object-fit: contain;
+  }
+  /* Scale up the featured card's image */
+  .state-card.active .plant-img {
+    max-height: 155px;
+  }
+
+  .state-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+  }
+
+  .state-badge {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 100px;
+  }
+  .badge-thriving { background: rgba(34,197,94,0.2); color: #4ade80; border: 1px solid rgba(74,222,128,0.3); }
+  .badge-healthy  { background: rgba(134,239,172,0.15); color: #86efac; border: 1px solid rgba(134,239,172,0.25); }
+  .badge-okay     { background: rgba(253,224,71,0.15); color: #fde047; border: 1px solid rgba(253,224,71,0.25); }
+  .badge-wilting  { background: rgba(251,191,36,0.15); color: #fbbf24; border: 1px solid rgba(251,191,36,0.25); }
+  .badge-dead     { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.25); }
+
+  .state-range {
+    font-size: 12px;
+    color: rgba(255,255,255,0.35);
+    font-weight: 500;
+  }
+
+  .state-desc {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  /* Health meter row at bottom */
+  .meter-row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 1100px;
+    position: relative;
+    z-index: 1;
+    gap: 12px;
+  }
+  .meter-label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .meter-track {
+    flex: 1;
+    height: 8px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+  }
+  .meter-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg,
+      #ef4444 0%,
+      #f97316 20%,
+      #eab308 40%,
+      #84cc16 60%,
+      #22c55e 80%,
+      #4ade80 100%
+    );
+    border-radius: 4px;
+  }
+  .meter-markers {
+    display: flex;
+    position: relative;
+    z-index: 1;
+    justify-content: space-between;
+    margin-top: 6px;
+  }
+  .meter-marker {
+    font-size: 10px;
+    color: rgba(255,255,255,0.3);
+    text-align: center;
+    flex: 1;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <div class="eyebrow">Plant Health System</div>
+    <h1>5 states that mirror your focus</h1>
+    <p class="subtitle">Your plant evolves throughout the day based on how you browse</p>
+  </div>
+
+  <div class="states-row">
+    <div class="state-card">
+      <div class="plant-img-wrap">
+        <img class="plant-img" src="../plant-focus-buddy/assets/monstera-dead.png" alt="Dead">
+      </div>
+      <div class="state-info">
+        <div class="state-badge badge-dead">Dead</div>
+        <div class="state-range">0–9%</div>
+        <div class="state-desc">Time to step away from the distractions</div>
+      </div>
+    </div>
+
+    <div class="state-card">
+      <div class="plant-img-wrap">
+        <img class="plant-img" src="../plant-focus-buddy/assets/monstera-wilting.png" alt="Wilting">
+      </div>
+      <div class="state-info">
+        <div class="state-badge badge-wilting">Wilting</div>
+        <div class="state-range">10–34%</div>
+        <div class="state-desc">Your plant is stressed — refocus now</div>
+      </div>
+    </div>
+
+    <div class="state-card">
+      <div class="plant-img-wrap">
+        <img class="plant-img" src="../plant-focus-buddy/assets/monstera-okay.png" alt="Okay">
+      </div>
+      <div class="state-info">
+        <div class="state-badge badge-okay">Okay</div>
+        <div class="state-range">35–59%</div>
+        <div class="state-desc">Hanging in there — keep going</div>
+      </div>
+    </div>
+
+    <div class="state-card">
+      <div class="plant-img-wrap">
+        <img class="plant-img" src="../plant-focus-buddy/assets/monstera-healthy.png" alt="Healthy">
+      </div>
+      <div class="state-info">
+        <div class="state-badge badge-healthy">Healthy</div>
+        <div class="state-range">60–84%</div>
+        <div class="state-desc">Looking good — solid focus today</div>
+      </div>
+    </div>
+
+    <div class="state-card active">
+      <div class="plant-img-wrap">
+        <img class="plant-img" src="../plant-focus-buddy/assets/monstera-thriving.png" alt="Thriving">
+      </div>
+      <div class="state-info">
+        <div class="state-badge badge-thriving">Thriving</div>
+        <div class="state-range">85–100%</div>
+        <div class="state-desc">Incredible focus — your plant loves it!</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="meter-row">
+    <div class="meter-label">Health</div>
+    <div class="meter-track">
+      <div class="meter-gradient"></div>
+    </div>
+    <div class="meter-label">100%</div>
+  </div>
+</div>
+</body>
+</html>

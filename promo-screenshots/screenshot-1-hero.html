@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>Plant Focus Buddy – Screenshot 1</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  body {
+    width: 1280px;
+    height: 800px;
+    overflow: hidden;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0f1a0f;
+  }
+
+  .bg {
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at 30% 50%, #1a3a1a 0%, #0d1f0d 50%, #080f08 100%);
+    position: relative;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  /* Ambient glow blobs */
+  /*.glow-1 {*/
+  /*  position: absolute;*/
+  /*  width: 600px; height: 600px;*/
+  /*  border-radius: 50%;*/
+  /*  background: radial-gradient(circle, rgba(74, 222, 128, 0.12) 0%, transparent 70%);*/
+  /*  top: -100px; left: -100px;*/
+  /*  pointer-events: none;*/
+  /*}*/
+  /*.glow-2 {*/
+  /*  position: absolute;*/
+  /*  width: 400px; height: 400px;*/
+  /*  border-radius: 50%;*/
+  /*  background: radial-gradient(circle, rgba(34, 197, 94, 0.08) 0%, transparent 70%);*/
+  /*  bottom: -50px; right: 200px;*/
+  /*  pointer-events: none;*/
+  /*}*/
+
+  /* Left: text content */
+  .left {
+    flex: 0 0 560px;
+    padding: 80px 60px 80px 80px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(74, 222, 128, 0.15);
+    border: 1px solid rgba(74, 222, 128, 0.3);
+    color: #4ade80;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 100px;
+    margin-bottom: 28px;
+  }
+  .badge-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #4ade80;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  h1 {
+    font-size: 56px;
+    font-weight: 800;
+    line-height: 1.1;
+    color: #ffffff;
+    margin-bottom: 20px;
+    letter-spacing: -0.02em;
+  }
+  h1 span {
+    background: linear-gradient(135deg, #4ade80, #22c55e, #16a34a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    font-size: 20px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.6;
+    margin-bottom: 44px;
+    max-width: 420px;
+  }
+
+  .features {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .feature {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .feature-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: rgba(74, 222, 128, 0.15);
+    border: 1px solid rgba(74, 222, 128, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .feature-text {
+    font-size: 16px;
+    color: rgba(255,255,255,0.75);
+    font-weight: 400;
+  }
+  .feature-text strong {
+    color: #ffffff;
+    font-weight: 600;
+  }
+
+  /* Right: new tab mockup */
+  .right {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+  }
+
+  .newtab-mockup {
+    width: 580px;
+    height: 480px;
+    background: linear-gradient(160deg, #1a2e1a 0%, #0f1f0f 100%);
+    border-radius: 16px;
+    border: 1px solid rgba(74, 222, 128, 0.2);
+    box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05), inset 0 1px 0 rgba(255,255,255,0.05);
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 28px 28px;
+  }
+
+  /* Browser chrome */
+  .browser-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 36px;
+    background: rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 6px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-r { background: #ff5f57; }
+  .dot-y { background: #febc2e; }
+  .dot-g { background: #28c840; }
+
+  .newtab-content {
+    margin-top: 36px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    flex: 1;
+  }
+
+  .nt-time {
+    font-size: 52px;
+    font-weight: 200;
+    color: rgba(255,255,255,0.9);
+    letter-spacing: 0.05em;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .nt-date {
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 16px;
+    letter-spacing: 0.05em;
+  }
+
+  .nt-plant-wrap {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    height: 140px;
+    margin-bottom: 12px;
+  }
+  .nt-plant {
+    height: 130px;
+    object-fit: contain;
+    filter: drop-shadow(0 8px 20px rgba(74,222,128,0.3));
+  }
+
+  .nt-state-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(74, 222, 128, 0.15);
+    border: 1px solid rgba(74, 222, 128, 0.35);
+    color: #4ade80;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 100px;
+    margin-bottom: 8px;
+  }
+  .nt-state-dot { width: 6px; height: 6px; border-radius: 50%; background: #4ade80; }
+
+  .nt-health-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 260px;
+    margin-bottom: 18px;
+  }
+  .nt-health-bar-bg {
+    flex: 1;
+    height: 6px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .nt-health-bar-fill {
+    height: 100%;
+    width: 92%;
+    background: linear-gradient(90deg, #22c55e, #4ade80);
+    border-radius: 3px;
+    box-shadow: 0 0 8px rgba(74,222,128,0.6);
+  }
+  .nt-health-pct {
+    font-size: 13px;
+    font-weight: 700;
+    color: #4ade80;
+    white-space: nowrap;
+  }
+
+  .nt-stats {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+  }
+  .nt-stat {
+    flex: 1;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 10px 12px;
+    text-align: center;
+  }
+  .nt-stat-label {
+    font-size: 10px;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+  }
+  .nt-stat-val {
+    font-size: 16px;
+    font-weight: 700;
+    color: #ffffff;
+  }
+  .nt-stat-val.green { color: #4ade80; }
+  .nt-stat-val.amber { color: #fbbf24; }
+
+  /* App name watermark */
+  .app-name {
+    position: absolute;
+    bottom: 32px;
+    left: 80px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    opacity: 0.5;
+  }
+  .app-name-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.05em;
+  }
+</style>
+</head>
+<body>
+<div class="bg">
+  <div class="glow-1"></div>
+  <div class="glow-2"></div>
+
+  <div class="left">
+    <div class="badge">
+      <div class="badge-dot"></div>
+      Chrome Extension
+    </div>
+
+    <h1>Grow your<br><span>focus.</span><br>Literally.</h1>
+
+    <p class="subtitle">A living plant lives in your browser. It thrives when you focus, and wilts when you get distracted.</p>
+
+    <div class="features">
+        <div class="feature">
+            <div class="feature-text"><strong>Define your focus sites</strong> and your distraction sites</div>
+        </div>
+      <div class="feature">
+        <div class="feature-text"><strong>Real-time health tracking</strong> - plant updates as you browse</div>
+      </div>
+      <div class="feature">
+        <div class="feature-text"><strong>Beautiful new tab dashboard</strong> - time, stats & streaks</div>
+      </div>
+      <div class="feature">
+        <div class="feature-text"><strong>4 plant varieties</strong> - Snake Plant, Monstera, Pothos, Peace Lily</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="newtab-mockup">
+      <div class="browser-bar">
+        <div class="dot dot-r"></div>
+        <div class="dot dot-y"></div>
+        <div class="dot dot-g"></div>
+      </div>
+      <div class="newtab-content">
+        <div class="nt-time">10:42</div>
+        <div class="nt-date">Wednesday, March 18</div>
+        <div class="nt-plant-wrap">
+          <img class="nt-plant" src="../plant-focus-buddy/assets/monstera-thriving.png" alt="Thriving Monstera">
+        </div>
+        <div class="nt-state-pill">
+          <div class="nt-state-dot"></div>
+          Thriving
+        </div>
+        <div class="nt-health-row">
+          <div class="nt-health-bar-bg">
+            <div class="nt-health-bar-fill"></div>
+          </div>
+          <div class="nt-health-pct">92%</div>
+        </div>
+        <div class="nt-stats">
+          <div class="nt-stat">
+            <div class="nt-stat-label">Focus</div>
+            <div class="nt-stat-val green">1h 24m</div>
+          </div>
+          <div class="nt-stat">
+            <div class="nt-stat-label">Distracted</div>
+            <div class="nt-stat-val amber">8m</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
