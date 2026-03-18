@@ -26,6 +26,13 @@
             OKAY:     'pothos-okay.png',
             WILTING:  'pothos-wilting.png',
             DEAD:     'pothos-dead.png',
+        },
+        lily: {
+            THRIVING: 'lily-thriving.png',
+            HEALTHY:  'lily-healthy.png',
+            OKAY:     'lily-okay.png',
+            WILTING:  'lily-wilting.png',
+            DEAD:     'lily-dead.png',
         }
     };
 

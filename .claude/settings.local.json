@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls /Users/ptudor01/IdeaProjects/plant-buddy-extension/plant-focus-buddy/assets/*dead* 2>/dev/null || echo \"No dead assets found\")",
+      "Bash(cd /Users/ptudor01/IdeaProjects/plant-buddy-extension/plant-focus-buddy/assets && md5 snake-dead.png snake-wilting.png monstera-dead.png monstera-wilting.png pothos-dead.png pothos-wilting.png)"
+    ]
+  }
+}
