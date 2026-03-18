@@ -53,7 +53,7 @@ function renderShortcuts(goodSites) {
 }
 
 function updateUI(state) {
-  const { plantHealth = 70, plantType = 'snake', sessionGoodTime = 0, sessionBadTime = 0, streak = 0, goodSites = [], darkMode = false } = state;
+  const { plantHealth = 70, plantType = 'snake', sessionGoodTime = 0, sessionBadTime = 0, goodSites = [], darkMode = false } = state;
   document.documentElement.classList.toggle('dark', darkMode);
   document.body.classList.toggle('dark', darkMode);
   renderShortcuts(goodSites);
@@ -68,8 +68,6 @@ function updateUI(state) {
   document.getElementById('state-label').textContent = healthToStateName(plantHealth);
   document.getElementById('stat-good').textContent = formatTime(sessionGoodTime);
   document.getElementById('stat-bad').textContent = formatTime(sessionBadTime);
-  document.getElementById('stat-streak').textContent = streak;
-
   // Background tint
   document.body.classList.remove('tint-wilting', 'tint-dead');
   if (plantHealth < 10) document.body.classList.add('tint-dead');

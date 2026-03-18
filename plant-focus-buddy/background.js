@@ -12,7 +12,6 @@ const DEFAULTS = {
   sessionGoodTime: 0,
   sessionBadTime: 0,
   lastResetDate: todayString(),
-  streak: 0,
   darkMode: false,
   totalGoodTime: 0,
   totalBadTime: 0
@@ -68,13 +67,11 @@ async function broadcastHealthUpdate(health, siteType) {
 chrome.alarms.onAlarm.addListener(async (alarm) => {
   if (alarm.name !== 'healthTick') return;
   const data = await chrome.storage.local.get(null);
-  let { plantHealth, goodSites, badSites, sessionGoodTime, sessionBadTime, lastResetDate, streak, totalGoodTime, totalBadTime } = data;
+  let { plantHealth, goodSites, badSites, sessionGoodTime, sessionBadTime, lastResetDate, totalGoodTime, totalBadTime } = data;
 
   // 1. Daily reset check
   const today = todayString();
   if (lastResetDate !== today) {
-    if (plantHealth > 0) streak = (streak || 0) + 1;
-    else streak = 0;
     plantHealth = 70;
     sessionGoodTime = 0;
     sessionBadTime = 0;
@@ -106,7 +103,7 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
   }
 
   // 5. Persist
-  await chrome.storage.local.set({ plantHealth, sessionGoodTime, sessionBadTime, lastResetDate, streak, totalGoodTime, totalBadTime });
+  await chrome.storage.local.set({ plantHealth, sessionGoodTime, sessionBadTime, lastResetDate, totalGoodTime, totalBadTime });
 
   // 6. Broadcast to all content scripts
   broadcastHealthUpdate(plantHealth, siteType);
