@@ -10,6 +10,14 @@ function formatTime(seconds) {
   return m + 'm';
 }
 
+function healthToMessage(health) {
+  if (health >= 85) return 'Your plant is loving this! Keep the focus going.';
+  if (health >= 60) return 'Looking good! You\'re on the right track!';
+  if (health >= 35) return 'Hanging in there, keep going!';
+  if (health >= 10) return 'Your plant is stressed. Time to refocus.';
+  return 'Time to step away from the distractions.';
+}
+
 function healthToStateName(health) {
   if (health >= 85) return 'Thriving';
   if (health >= 60) return 'Healthy';
@@ -66,6 +74,7 @@ function updateUI(state) {
   document.getElementById('health-bar').style.width = plantHealth + '%';
   document.getElementById('health-glow').style.width = plantHealth + '%';
   document.getElementById('state-label').textContent = healthToStateName(plantHealth);
+  document.getElementById('health-message').textContent = healthToMessage(plantHealth);
   document.getElementById('stat-good').textContent = formatTime(sessionGoodTime);
   document.getElementById('stat-bad').textContent = formatTime(sessionBadTime);
   // Background tint

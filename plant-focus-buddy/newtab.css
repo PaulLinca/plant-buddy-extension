@@ -158,6 +158,19 @@ body.tint-dead .orb-3 { background: radial-gradient(circle, rgba(180,180,180,0.1
   pointer-events: none;
 }
 
+/* ── Health message ──────────────────────────────────────────────────── */
+.health-message {
+  font-size: 14px;
+  font-style: italic;
+  color: rgba(30,60,35,0.5);
+  text-align: center;
+  max-width: 320px;
+  line-height: 1.5;
+}
+body.tint-wilting .health-message { color: rgba(60,48,16,0.5); }
+body.tint-dead    .health-message { color: rgba(40,40,40,0.4); }
+body.dark         .health-message { color: rgba(180,220,190,0.45); }
+
 /* ── Stats ───────────────────────────────────────────────────────────── */
 .stats-row {
   display: flex;
