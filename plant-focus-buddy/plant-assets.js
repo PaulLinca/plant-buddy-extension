@@ -19,6 +19,13 @@
             OKAY:     'monstera-okay.png',
             WILTING:  'monstera-wilting.png',
             DEAD:     'monstera-dead.png',
+        },
+        pothos: {
+            THRIVING: 'pothos-thriving.png',
+            HEALTHY:  'pothos-healthy.png',
+            OKAY:     'pothos-okay.png',
+            WILTING:  'pothos-wilting.png',
+            DEAD:     'pothos-dead.png',
         }
     };
 
