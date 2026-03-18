@@ -109,7 +109,7 @@ function initTestView() {
     { name: 'Healthy',  health: 70 },
     { name: 'Okay',     health: 50 },
     { name: 'Wilting',  health: 25 },
-    { name: 'Dead',     health: 10  },
+    { name: 'Dead',     health: 5   },
   ];
 
   const row = document.getElementById('test-states-row');
