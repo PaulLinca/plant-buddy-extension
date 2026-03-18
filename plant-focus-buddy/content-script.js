@@ -40,8 +40,23 @@
             showTab.innerHTML = '<svg width="10" height="10" viewBox="0 0 12 12"><path d="M6 1 Q9 4 6 7 Q3 4 6 1Z" fill="white"/></svg>';
             document.body.appendChild(showTab);
 
+            let currentHealth = plantHealth;
+
             // Render plant
-            renderPlant(plantHealth, plantWrap);
+            renderPlant(currentHealth, plantWrap);
+
+            function showPlant() {
+                chrome.storage.local.set({plantVisible: true});
+                overlay.classList.remove('pfb-hidden');
+                showTab.classList.remove('pfb-visible');
+                renderPlant(currentHealth, plantWrap);
+            }
+
+            function hidePlant() {
+                chrome.storage.local.set({plantVisible: false});
+                overlay.classList.add('pfb-hidden');
+                showTab.classList.add('pfb-visible');
+            }
 
             // Apply visibility
             if (!plantVisible) {
@@ -52,31 +67,19 @@
             // Toggle button
             toggleBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                chrome.storage.local.set({plantVisible: false});
-                overlay.classList.add('pfb-hidden');
-                showTab.classList.add('pfb-visible');
+                hidePlant();
             });
 
             // Show tab
             showTab.addEventListener('click', () => {
-                chrome.storage.local.set({plantVisible: true});
-                overlay.classList.remove('pfb-hidden');
-                showTab.classList.remove('pfb-visible');
+                showPlant();
             });
 
             // Alt+P shortcut
             document.addEventListener('keydown', (e) => {
                 if (e.altKey && e.key === 'p') {
-                    const isHidden = overlay.classList.contains('pfb-hidden');
-                    if (isHidden) {
-                        chrome.storage.local.set({plantVisible: true});
-                        overlay.classList.remove('pfb-hidden');
-                        showTab.classList.remove('pfb-visible');
-                    } else {
-                        chrome.storage.local.set({plantVisible: false});
-                        overlay.classList.add('pfb-hidden');
-                        showTab.classList.add('pfb-visible');
-                    }
+                    if (overlay.classList.contains('pfb-hidden')) showPlant();
+                    else hidePlant();
                 }
             });
 
@@ -117,9 +120,12 @@
             // Listen for health updates
             chrome.runtime.onMessage.addListener((msg) => {
                 if (msg.type === 'HEALTH_UPDATE') {
-                    renderPlant(msg.health, plantWrap);
-                    overlay.classList.add('pfb-state-changed');
-                    setTimeout(() => overlay.classList.remove('pfb-state-changed'), 1000);
+                    currentHealth = msg.health;
+                    if (!overlay.classList.contains('pfb-hidden')) {
+                        renderPlant(currentHealth, plantWrap);
+                        overlay.classList.add('pfb-state-changed');
+                        setTimeout(() => overlay.classList.remove('pfb-state-changed'), 1000);
+                    }
                 }
             });
         });
