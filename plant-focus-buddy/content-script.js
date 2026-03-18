@@ -13,8 +13,9 @@
     }
 
     function init() {
-        chrome.storage.local.get(['plantHealth', 'plantVisible', 'plantPosition'], (data) => {
-            const {plantHealth = 70, plantVisible = true, plantPosition = 'bottom-right'} = data;
+        chrome.storage.local.get(['plantHealth', 'plantVisible', 'plantPosition', 'plantType'], (data) => {
+            const {plantHealth = 70, plantVisible = true, plantPosition = 'bottom-right', plantType = 'snake'} = data;
+            PlantAssets.setType(plantType);
 
             // Create overlay
             const overlay = document.createElement('div');

@@ -85,25 +85,30 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
   const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
   const siteType = classifyTab(activeTab, goodSites || [], badSites || []);
 
-  // 3. Update health
-  let delta = -0.2; // passive decay
+  // 3. Update session tracking
   if (siteType === 'good') {
-    delta += 0.5;
     sessionGoodTime += 10;
     totalGoodTime += 10;
   }
   if (siteType === 'bad') {
-    delta -= 1.0;
     sessionBadTime += 10;
     totalBadTime += 10;
   }
-  if (plantHealth <= 0 && delta < 0) delta = 0;
-  plantHealth = Math.max(0, Math.min(100, plantHealth + delta));
 
-  // 4. Persist
+  // 4. Calculate health from focus/distraction ratio.
+  // At 0/0 (no tracked activity) → 70%. More focus than distraction → above 70%, and vice versa.
+  const totalTracked = sessionGoodTime + sessionBadTime;
+  if (totalTracked === 0) {
+    plantHealth = 70;
+  } else {
+    const ratio = sessionGoodTime / totalTracked;
+    plantHealth = Math.max(0, Math.min(100, Math.round(70 + (ratio - 0.5) * 100)));
+  }
+
+  // 5. Persist
   await chrome.storage.local.set({ plantHealth, sessionGoodTime, sessionBadTime, lastResetDate, streak, totalGoodTime, totalBadTime });
 
-  // 5. Broadcast to all content scripts
+  // 6. Broadcast to all content scripts
   broadcastHealthUpdate(plantHealth, siteType);
 });
 

@@ -105,11 +105,11 @@ function fetchAndRender() {
 
 function initTestView() {
   const STATES = [
-    { name: 'Thriving', health: 92 },
-    { name: 'Healthy',  health: 72 },
-    { name: 'Okay',     health: 47 },
-    { name: 'Wilting',  health: 20 },
-    { name: 'Dead',     health: 4  },
+    { name: 'Thriving', health: 90 },
+    { name: 'Healthy',  health: 70 },
+    { name: 'Okay',     health: 50 },
+    { name: 'Wilting',  health: 25 },
+    { name: 'Dead',     health: 10  },
   ];
 
   const row = document.getElementById('test-states-row');
