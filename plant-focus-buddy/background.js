@@ -93,16 +93,22 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
     totalBadTime += 10;
   }
 
-  // 4. Calculate health from focus/distraction ratio.
-  // At 0/0 (no tracked activity) → 70%. More focus than distraction → above 70%, and vice versa.
-  // Leniency controls how much browsing swings health: strict=±50, balanced=±30, relaxed=±15.
-  const leniencyMultiplier = leniency === 'strict' ? 100 : leniency === 'relaxed' ? 30 : 60;
-  const totalTracked = sessionGoodTime + sessionBadTime;
-  if (totalTracked === 0) {
-    plantHealth = 70;
-  } else {
-    const ratio = sessionGoodTime / totalTracked;
-    plantHealth = Math.max(0, Math.min(100, Math.round(70 + (ratio - 0.5) * leniencyMultiplier)));
+  // 4. Calculate health from session focus/distraction totals.
+  // Anchored to the daily baseline (70). Leniency controls penalty weight and impact scale.
+  const LENIENCY = {
+    relaxed:  { penaltyWeight: 1.2, scale: 30 },
+    balanced: { penaltyWeight: 1.6, scale: 45 },
+    strict:   { penaltyWeight: 2.0, scale: 60 },
+  };
+  const { penaltyWeight, scale } = LENIENCY[leniency] || LENIENCY.balanced;
+  const focusMin = sessionGoodTime / 60;
+  const distractMin = sessionBadTime / 60;
+  const totalMin = focusMin + distractMin;
+  if (totalMin > 0) {
+    let effective = focusMin - (distractMin * penaltyWeight);
+    let impact = (effective / totalMin) * scale;
+    if (distractMin > focusMin) impact *= 1.2;
+    plantHealth = Math.max(0, Math.min(100, Math.round(70 + impact)));
   }
 
   // 5. Persist
