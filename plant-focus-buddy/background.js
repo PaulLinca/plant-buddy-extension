@@ -14,7 +14,8 @@ const DEFAULTS = {
   lastResetDate: todayString(),
   darkMode: false,
   totalGoodTime: 0,
-  totalBadTime: 0
+  totalBadTime: 0,
+  leniency: 'balanced'
 };
 
 chrome.runtime.onInstalled.addListener(async ({ reason }) => {
@@ -67,7 +68,7 @@ async function broadcastHealthUpdate(health, siteType) {
 chrome.alarms.onAlarm.addListener(async (alarm) => {
   if (alarm.name !== 'healthTick') return;
   const data = await chrome.storage.local.get(null);
-  let { plantHealth, goodSites, badSites, sessionGoodTime, sessionBadTime, lastResetDate, totalGoodTime, totalBadTime } = data;
+  let { plantHealth, goodSites, badSites, sessionGoodTime, sessionBadTime, lastResetDate, totalGoodTime, totalBadTime, leniency } = data;
 
   // 1. Daily reset check
   const today = todayString();
@@ -94,12 +95,14 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
 
   // 4. Calculate health from focus/distraction ratio.
   // At 0/0 (no tracked activity) → 70%. More focus than distraction → above 70%, and vice versa.
+  // Leniency controls how much browsing swings health: strict=±50, balanced=±30, relaxed=±15.
+  const leniencyMultiplier = leniency === 'strict' ? 100 : leniency === 'relaxed' ? 30 : 60;
   const totalTracked = sessionGoodTime + sessionBadTime;
   if (totalTracked === 0) {
     plantHealth = 70;
   } else {
     const ratio = sessionGoodTime / totalTracked;
-    plantHealth = Math.max(0, Math.min(100, Math.round(70 + (ratio - 0.5) * 100)));
+    plantHealth = Math.max(0, Math.min(100, Math.round(70 + (ratio - 0.5) * leniencyMultiplier)));
   }
 
   // 5. Persist

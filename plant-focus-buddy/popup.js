@@ -55,6 +55,12 @@ function renderSitesList(containerId, sites, type) {
   });
 }
 
+function renderLeniencyButtons(currentLeniency) {
+  document.querySelectorAll('.leniency-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.leniency === currentLeniency);
+  });
+}
+
 function renderPositionButtons(currentPos) {
   document.querySelectorAll('.pos-btn').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.pos === currentPos);
@@ -71,7 +77,7 @@ function loadState() {
   chrome.runtime.sendMessage({ type: 'GET_STATE' }, (state) => {
     if (!state) return;
     appState = state;
-    const { plantHealth = 70, plantType = 'snake', plantVisible = true, plantPosition = 'bottom-right', darkMode = false, goodSites = [], badSites = [] } = state;
+    const { plantHealth = 70, plantType = 'snake', plantVisible = true, plantPosition = 'bottom-right', darkMode = false, goodSites = [], badSites = [], leniency = 'balanced' } = state;
 
     document.body.classList.toggle('dark', darkMode);
     document.getElementById('dark-mode-toggle').checked = darkMode;
@@ -98,6 +104,9 @@ function loadState() {
 
     // Plant type
     renderPlantTypeButtons(plantType);
+
+    // Leniency
+    renderLeniencyButtons(leniency);
 
     // Position
     renderPositionButtons(plantPosition);
@@ -131,6 +140,14 @@ document.addEventListener('DOMContentLoaded', () => {
       PlantAssets.setType(btn.dataset.type);
       const plantWrap = document.getElementById('popup-plant-wrap');
       renderPlant(appState.plantHealth ?? 70, plantWrap);
+    });
+  });
+
+  // Leniency buttons
+  document.querySelectorAll('.leniency-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      await chrome.storage.local.set({ leniency: btn.dataset.leniency });
+      renderLeniencyButtons(btn.dataset.leniency);
     });
   });
 
