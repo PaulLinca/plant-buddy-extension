@@ -3,7 +3,7 @@
   "name": "Plant Focus Buddy",
   "version": "1.0.0",
   "description": "A living plant that thrives when you focus and wilts when you get distracted.",
-  "permissions": ["tabs", "storage", "alarms", "scripting", "activeTab"],
+  "permissions": ["tabs", "storage", "alarms", "activeTab"],
   "host_permissions": ["<all_urls>"],
   "background": { "service_worker": "background.js" },
   "action": {
