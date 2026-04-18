@@ -11,6 +11,8 @@ const DEFAULTS = {
   plantPosition: 'bottom-right',
   sessionGoodTime: 0,
   sessionBadTime: 0,
+  healthResetGoodTime: 0,
+  healthResetBadTime: 0,
   lastResetDate: todayString(),
   darkMode: false,
   totalGoodTime: 0,
@@ -68,7 +70,9 @@ async function broadcastHealthUpdate(health, siteType) {
 chrome.alarms.onAlarm.addListener(async (alarm) => {
   if (alarm.name !== 'healthTick') return;
   const data = await chrome.storage.local.get(null);
-  let { plantHealth, goodSites, badSites, sessionGoodTime, sessionBadTime, lastResetDate, totalGoodTime, totalBadTime, leniency } = data;
+  let { plantHealth, goodSites, badSites, sessionGoodTime, sessionBadTime, healthResetGoodTime, healthResetBadTime, lastResetDate, totalGoodTime, totalBadTime, leniency } = data;
+  healthResetGoodTime = healthResetGoodTime || 0;
+  healthResetBadTime = healthResetBadTime || 0;
 
   // 1. Daily reset check
   const today = todayString();
@@ -76,6 +80,8 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
     plantHealth = 70;
     sessionGoodTime = 0;
     sessionBadTime = 0;
+    healthResetGoodTime = 0;
+    healthResetBadTime = 0;
     lastResetDate = today;
   }
 
@@ -101,8 +107,8 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
     strict:   { penaltyWeight: 2.0, scale: 60 },
   };
   const { penaltyWeight, scale } = LENIENCY[leniency] || LENIENCY.balanced;
-  const focusMin = sessionGoodTime / 60;
-  const distractMin = sessionBadTime / 60;
+  const focusMin = (sessionGoodTime - healthResetGoodTime) / 60;
+  const distractMin = (sessionBadTime - healthResetBadTime) / 60;
   const totalMin = focusMin + distractMin;
   if (totalMin > 0) {
     let effective = focusMin - (distractMin * penaltyWeight);
@@ -112,7 +118,7 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
   }
 
   // 5. Persist
-  await chrome.storage.local.set({ plantHealth, sessionGoodTime, sessionBadTime, lastResetDate, totalGoodTime, totalBadTime });
+  await chrome.storage.local.set({ plantHealth, sessionGoodTime, sessionBadTime, healthResetGoodTime, healthResetBadTime, lastResetDate, totalGoodTime, totalBadTime });
 
   // 6. Broadcast to all content scripts
   broadcastHealthUpdate(plantHealth, siteType);
@@ -133,9 +139,15 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
     return true;
   }
   if (msg.type === 'RESET_PLANT') {
-    chrome.storage.local.set({ plantHealth: 70 }).then(() => {
-      sendResponse({ ok: true });
-      broadcastHealthUpdate(70, 'neutral');
+    chrome.storage.local.get(['sessionGoodTime', 'sessionBadTime']).then(({ sessionGoodTime, sessionBadTime }) => {
+      chrome.storage.local.set({
+        plantHealth: 70,
+        healthResetGoodTime: sessionGoodTime || 0,
+        healthResetBadTime: sessionBadTime || 0,
+      }).then(() => {
+        sendResponse({ ok: true });
+        broadcastHealthUpdate(70, 'neutral');
+      });
     });
     return true;
   }
