@@ -118,6 +118,15 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
   broadcastHealthUpdate(plantHealth, siteType);
 });
 
+async function broadcastMessage(msg) {
+  const tabs = await chrome.tabs.query({});
+  for (const tab of tabs) {
+    try {
+      await chrome.tabs.sendMessage(tab.id, msg);
+    } catch (_) {}
+  }
+}
+
 chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
   if (msg.type === 'GET_STATE') {
     chrome.storage.local.get(null).then(sendResponse);
@@ -127,6 +136,13 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
     chrome.storage.local.set({ plantHealth: 70 }).then(() => {
       sendResponse({ ok: true });
       broadcastHealthUpdate(70, 'neutral');
+    });
+    return true;
+  }
+  if (msg.type === 'SET_OVERLAY_VISIBLE') {
+    chrome.storage.local.set({ plantVisible: msg.visible }).then(() => {
+      broadcastMessage({ type: 'OVERLAY_VISIBLE', visible: msg.visible });
+      sendResponse({ ok: true });
     });
     return true;
   }

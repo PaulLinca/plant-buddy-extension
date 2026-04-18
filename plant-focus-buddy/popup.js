@@ -120,9 +120,9 @@ function loadState() {
 document.addEventListener('DOMContentLoaded', () => {
   loadState();
 
-  // Visibility toggle
-  document.getElementById('plant-visible-toggle').addEventListener('change', async (e) => {
-    await chrome.storage.local.set({ plantVisible: e.target.checked });
+  // Corner overlay toggle
+  document.getElementById('plant-visible-toggle').addEventListener('change', (e) => {
+    chrome.runtime.sendMessage({ type: 'SET_OVERLAY_VISIBLE', visible: e.target.checked });
   });
 
   // Dark mode toggle

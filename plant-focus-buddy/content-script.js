@@ -2,7 +2,7 @@
     if (!document.body) return;
     if (document.getElementById('pfb-overlay')) return;
 
-    init();
+    let overlayEnabled = true;
 
     function formatTime(seconds) {
         if (seconds < 60) return seconds + 's';
@@ -12,9 +12,20 @@
         return m + 'm';
     }
 
+    function teardown() {
+        const ov = document.getElementById('pfb-overlay');
+        if (ov) ov.remove();
+        const tab = document.getElementById('pfb-show-tab');
+        if (tab) tab.remove();
+    }
+
     function init() {
         chrome.storage.local.get(['plantHealth', 'plantVisible', 'plantPosition', 'plantType'], (data) => {
             const {plantHealth = 70, plantVisible = true, plantPosition = 'bottom-right', plantType = 'snake'} = data;
+
+            overlayEnabled = plantVisible;
+            if (!overlayEnabled) return;
+
             PlantAssets.setType(plantType);
 
             // Create overlay
@@ -25,54 +36,64 @@
             const plantWrap = document.createElement('div');
             plantWrap.id = 'pfb-plant-wrap';
 
-            const toggleBtn = document.createElement('button');
-            toggleBtn.id = 'pfb-toggle-btn';
-            toggleBtn.title = 'Hide plant (Alt+P)';
-            toggleBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 12 12"><path d="M6 1 Q9 4 6 7 Q3 4 6 1Z" fill="white"/></svg>';
-
             overlay.appendChild(plantWrap);
-            overlay.appendChild(toggleBtn);
             document.body.appendChild(overlay);
 
             // Show tab
             const showTab = document.createElement('div');
             showTab.id = 'pfb-show-tab';
-            showTab.innerHTML = '<svg width="10" height="10" viewBox="0 0 12 12"><path d="M6 1 Q9 4 6 7 Q3 4 6 1Z" fill="white"/></svg>';
+            showTab.className = `pfb-show-tab pfb-position-${plantPosition}`;
+            const arrowRight = '<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M3 1.5l4 3.5-4 3.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+            const arrowLeft  = '<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M7 1.5L3 5l4 3.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+            showTab.innerHTML = plantPosition.endsWith('left') ? arrowRight : arrowLeft;
             document.body.appendChild(showTab);
 
             let currentHealth = plantHealth;
 
-            // Render plant
             renderPlant(currentHealth, plantWrap);
 
             function showPlant() {
-                chrome.storage.local.set({plantVisible: true});
                 overlay.classList.remove('pfb-hidden');
                 showTab.classList.remove('pfb-visible');
                 renderPlant(currentHealth, plantWrap);
             }
 
             function hidePlant() {
-                chrome.storage.local.set({plantVisible: false});
                 overlay.classList.add('pfb-hidden');
                 showTab.classList.add('pfb-visible');
             }
 
-            // Apply visibility
-            if (!plantVisible) {
-                overlay.classList.add('pfb-hidden');
-                showTab.classList.add('pfb-visible');
-            }
+            // Show tab click
+            showTab.addEventListener('click', () => showPlant());
 
-            // Toggle button
-            toggleBtn.addEventListener('click', (e) => {
+            // Plant click: hide for this session
+            plantWrap.addEventListener('click', (e) => {
                 e.stopPropagation();
                 hidePlant();
             });
 
-            // Show tab
-            showTab.addEventListener('click', () => {
-                showPlant();
+            // Hover tooltip
+            let tooltip = null;
+            plantWrap.addEventListener('mouseenter', () => {
+                chrome.runtime.sendMessage({type: 'GET_STATE'}, (state) => {
+                    if (!state || tooltip) return;
+                    tooltip = document.createElement('div');
+                    tooltip.id = 'pfb-tooltip';
+                    const stateName = state.plantHealth >= 85 ? 'Thriving' : state.plantHealth >= 60 ? 'Healthy' : state.plantHealth >= 35 ? 'Okay' : state.plantHealth >= 10 ? 'Wilting' : 'Dead';
+                    tooltip.innerHTML = `<strong>${stateName}</strong> · ${Math.round(state.plantHealth)}%<br><span>Focus ${formatTime(state.sessionGoodTime)} · Distracted ${formatTime(state.sessionBadTime)}</span>`;
+                    const rect = plantWrap.getBoundingClientRect();
+                    const isTop  = plantPosition.startsWith('top');
+                    const isLeft = plantPosition.endsWith('left');
+                    if (isTop)  tooltip.style.top    = (rect.bottom + 8) + 'px';
+                    else        tooltip.style.bottom  = (window.innerHeight - rect.top + 8) + 'px';
+                    if (isLeft) tooltip.style.left    = rect.left + 'px';
+                    else        tooltip.style.right   = (window.innerWidth - rect.right) + 'px';
+                    document.body.appendChild(tooltip);
+                });
+            });
+
+            plantWrap.addEventListener('mouseleave', () => {
+                if (tooltip) { tooltip.remove(); tooltip = null; }
             });
 
             // Alt+P shortcut
@@ -83,41 +104,7 @@
                 }
             });
 
-            // Plant click: show tooltip
-            let tooltip = null;
-            plantWrap.addEventListener('click', (e) => {
-                e.stopPropagation();
-                if (tooltip) {
-                    tooltip.remove();
-                    tooltip = null;
-                    return;
-                }
-                chrome.runtime.sendMessage({type: 'GET_STATE'}, (state) => {
-                    if (!state) return;
-                    tooltip = document.createElement('div');
-                    tooltip.id = 'pfb-tooltip';
-                    tooltip.innerHTML = `
-            <strong>Plant Focus Buddy</strong><br>
-            Health: ${Math.round(state.plantHealth)}%<br>
-            Today's focus: ${formatTime(state.sessionGoodTime)}<br>
-            Today's distracted: ${formatTime(state.sessionBadTime)}
-          `;
-                    // Position near plant
-                    const rect = plantWrap.getBoundingClientRect();
-                    tooltip.style.bottom = (window.innerHeight - rect.top + 8) + 'px';
-                    tooltip.style.right = (window.innerWidth - rect.right + 10) + 'px';
-                    document.body.appendChild(tooltip);
-                });
-            });
-
-            document.addEventListener('click', () => {
-                if (tooltip) {
-                    tooltip.remove();
-                    tooltip = null;
-                }
-            });
-
-            // Listen for health updates
+            // Listen for updates from background
             chrome.runtime.onMessage.addListener((msg) => {
                 if (msg.type === 'HEALTH_UPDATE') {
                     currentHealth = msg.health;
@@ -127,18 +114,37 @@
                         setTimeout(() => overlay.classList.remove('pfb-state-changed'), 1000);
                     }
                 }
+                if (msg.type === 'OVERLAY_VISIBLE') {
+                    overlayEnabled = msg.visible;
+                    if (!msg.visible) {
+                        teardown();
+                    } else if (!document.getElementById('pfb-overlay')) {
+                        init();
+                    }
+                }
             });
         });
     }
 
-    // MutationObserver to re-inject if overlay is removed
-    const observer = new MutationObserver(() => {
-        if (!document.getElementById('pfb-overlay') && document.body) {
-            observer.disconnect();
-            // Re-run
-            if (typeof renderPlant === 'function') {
+    // Listen for enable/disable before init completes
+    chrome.runtime.onMessage.addListener((msg) => {
+        if (msg.type === 'OVERLAY_VISIBLE') {
+            overlayEnabled = msg.visible;
+            if (!msg.visible) {
+                teardown();
+            } else if (!document.getElementById('pfb-overlay')) {
                 init();
             }
+        }
+    });
+
+    init();
+
+    // MutationObserver to re-inject if overlay is removed by the page
+    const observer = new MutationObserver(() => {
+        if (!document.getElementById('pfb-overlay') && document.body && overlayEnabled) {
+            observer.disconnect();
+            init();
         }
     });
     observer.observe(document.body, {childList: true});

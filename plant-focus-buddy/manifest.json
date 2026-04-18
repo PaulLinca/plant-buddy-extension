@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Plant Focus Buddy",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A living plant that thrives when you focus and wilts when you get distracted.",
   "permissions": ["tabs", "storage", "alarms", "activeTab"],
   "host_permissions": ["<all_urls>"],
