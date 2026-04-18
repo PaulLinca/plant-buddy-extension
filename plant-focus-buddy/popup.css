@@ -409,6 +409,24 @@ input:checked + .slider::before { transform: translateX(18px); }
   min-height: 13px;
 }
 
+/* ── Pause ────────────────────────────────────────────────────────────── */
+.pause-btn {
+  width: 100%;
+  padding: 9px;
+  background: #fff;
+  border: 1.5px solid #C8DFC8;
+  color: #3A7A50;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.2s;
+  margin-bottom: 8px;
+}
+.pause-btn:hover { background: #F0FAF0; border-color: #3A7A50; }
+.pause-btn.active { background: #3A7A50; color: #fff; border-color: #3A7A50; }
+.pause-btn.active:hover { background: #2E6040; }
+
 /* ── Reset ────────────────────────────────────────────────────────────── */
 .reset-btn {
   width: 100%;
@@ -473,6 +491,10 @@ body.dark .site-tag button { background: rgba(255,255,255,0.07); }
 body.dark .site-input     { background: #1A2820; border-color: #2E4035; color: #C0D8C8; }
 body.dark .site-input:focus { background: #1E3028; border-color: #2E9E50; }
 body.dark .bad-input:focus  { border-color: #E85050; }
+
+body.dark .pause-btn       { background: #1E2B22; border-color: #2A5A3A; color: #7EC89A; }
+body.dark .pause-btn:hover { background: #1A3A28; }
+body.dark .pause-btn.active { background: #2E6040; color: #fff; border-color: #2E6040; }
 
 body.dark .reset-btn      { background: #1E2B22; border-color: #5A2A2A; color: #E08080; }
 body.dark .reset-btn:hover { background: #3A1A1A; }

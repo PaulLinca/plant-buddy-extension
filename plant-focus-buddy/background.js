@@ -17,7 +17,8 @@ const DEFAULTS = {
   darkMode: false,
   totalGoodTime: 0,
   totalBadTime: 0,
-  leniency: 'balanced'
+  leniency: 'balanced',
+  monitoringPaused: false,
 };
 
 chrome.runtime.onInstalled.addListener(async ({ reason }) => {
@@ -70,7 +71,7 @@ async function broadcastHealthUpdate(health, siteType) {
 chrome.alarms.onAlarm.addListener(async (alarm) => {
   if (alarm.name !== 'healthTick') return;
   const data = await chrome.storage.local.get(null);
-  let { plantHealth, goodSites, badSites, sessionGoodTime, sessionBadTime, healthResetGoodTime, healthResetBadTime, lastResetDate, totalGoodTime, totalBadTime, leniency } = data;
+  let { plantHealth, goodSites, badSites, sessionGoodTime, sessionBadTime, healthResetGoodTime, healthResetBadTime, lastResetDate, totalGoodTime, totalBadTime, leniency, monitoringPaused } = data;
   healthResetGoodTime = healthResetGoodTime || 0;
   healthResetBadTime = healthResetBadTime || 0;
 
@@ -89,14 +90,16 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
   const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
   const siteType = classifyTab(activeTab, goodSites || [], badSites || []);
 
-  // 3. Update session tracking
-  if (siteType === 'good') {
-    sessionGoodTime += 10;
-    totalGoodTime += 10;
-  }
-  if (siteType === 'bad') {
-    sessionBadTime += 10;
-    totalBadTime += 10;
+  // 3. Update session tracking (skip if paused)
+  if (!monitoringPaused) {
+    if (siteType === 'good') {
+      sessionGoodTime += 10;
+      totalGoodTime += 10;
+    }
+    if (siteType === 'bad') {
+      sessionBadTime += 10;
+      totalBadTime += 10;
+    }
   }
 
   // 4. Calculate health from session focus/distraction totals.
@@ -148,6 +151,13 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
         sendResponse({ ok: true });
         broadcastHealthUpdate(70, 'neutral');
       });
+    });
+    return true;
+  }
+  if (msg.type === 'SET_MONITORING_PAUSED') {
+    chrome.storage.local.set({ monitoringPaused: msg.paused }).then(() => {
+      broadcastMessage({ type: 'MONITORING_PAUSED', paused: msg.paused });
+      sendResponse({ ok: true });
     });
     return true;
   }

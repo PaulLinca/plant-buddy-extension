@@ -73,11 +73,22 @@ function renderPlantTypeButtons(currentType) {
   });
 }
 
+function renderPauseButton(paused) {
+  const btn = document.getElementById('pause-btn');
+  if (paused) {
+    btn.textContent = 'Resume Monitoring';
+    btn.classList.add('active');
+  } else {
+    btn.textContent = 'Pause Monitoring';
+    btn.classList.remove('active');
+  }
+}
+
 function loadState() {
   chrome.runtime.sendMessage({ type: 'GET_STATE' }, (state) => {
     if (!state) return;
     appState = state;
-    const { plantHealth = 70, plantType = 'snake', plantVisible = true, plantPosition = 'bottom-right', darkMode = false, goodSites = [], badSites = [], leniency = 'balanced' } = state;
+    const { plantHealth = 70, plantType = 'snake', plantVisible = true, plantPosition = 'bottom-right', darkMode = false, goodSites = [], badSites = [], leniency = 'balanced', monitoringPaused = false } = state;
 
     document.body.classList.toggle('dark', darkMode);
     document.getElementById('dark-mode-toggle').checked = darkMode;
@@ -110,6 +121,9 @@ function loadState() {
 
     // Position
     renderPositionButtons(plantPosition);
+
+    // Pause button
+    renderPauseButton(monitoringPaused);
 
     // Sites
     renderSitesList('good-sites-list', goodSites, 'good');
@@ -213,6 +227,15 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   document.getElementById('bad-site-input').addEventListener('keydown', (e) => {
     if (e.key === 'Enter') document.getElementById('add-bad-btn').click();
+  });
+
+  // Pause/resume button
+  document.getElementById('pause-btn').addEventListener('click', () => {
+    const paused = !appState.monitoringPaused;
+    chrome.runtime.sendMessage({ type: 'SET_MONITORING_PAUSED', paused }, () => {
+      appState.monitoringPaused = paused;
+      renderPauseButton(paused);
+    });
   });
 
   // Reset button (two-click confirm)
